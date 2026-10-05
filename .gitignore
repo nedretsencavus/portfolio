@@ -1,6 +1,5 @@
 /.quarto/
 *_cache
-*_files/
 
 .Rhistory
 .RData

@@ -1,7 +1,7 @@
 ---
-title: "48-Hour Chart Hackathon: Visualizing the Happy Planet Index"
+title: "Chart Producing Hackathon: Visualizing the Happy Planet Index"
 subtitle: "EPPS 6356 Data Visualization | Assignment 4"
-author: "Team Hackathon (Nedret Sen-Cavus, Anugraha Samuel Gloria,Shao-Kang)"
+author: " Hackathon Team:Nedret Sen-Cavus, Anugraha Samuel Gloria,Shao-Kang"
 date: "October 2, 2026"
 format:
   html:
