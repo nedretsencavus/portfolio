@@ -59,7 +59,12 @@ p4 <- ggplot(df_chart4, aes(x = continent_ordered, y = mean_hpi, fill = continen
     subtitle = "Unweighted mean Happy Planet Index of the countries in each continent; n gives the number of countries behind each column.",
     caption  = "Source: Happy Planet Index (2024 Edition) | EPPS 6356 Hackathon"
   ) +
-  theme_hackathon(legend_pos = "none")
+  theme_hackathon(legend_pos = "none") +
+  theme(
+    # theme_hackathon() resets axis.title.y without an angle, which leaves the
+    # y title horizontal and squeezes the panel; the same fix is used in Chart1.R
+    axis.title.y = element_text(angle = 90, vjust = 2, margin = margin(r = 10))
+  )
 
 p4
 
