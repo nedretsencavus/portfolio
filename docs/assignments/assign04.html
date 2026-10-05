@@ -6,8 +6,10 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Team Hackathon (Nedret Sen-Cavus, Anugraha Samuel Gloria,Shao-Kang)">
+<meta name="dcterms.date" content="2026-10-02">
 
-<title>assign04 – Nedret Sen Cavus</title>
+<title>48-Hour Chart Hackathon: Visualizing the Happy Planet Index – Nedret Sen Cavus</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -25,6 +27,41 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -73,7 +110,40 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+<link href="../site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
 
+<script src="../site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="../styles.css">
 </head>
@@ -131,22 +201,52 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#analytical-takeaway" id="toc-analytical-takeaway" class="nav-link active" data-scroll-target="#analytical-takeaway">Analytical Takeaway</a></li>
+  <li><a href="#chart-2-table-with-embedded-distribution-bars" id="toc-chart-2-table-with-embedded-distribution-bars" class="nav-link" data-scroll-target="#chart-2-table-with-embedded-distribution-bars">Chart 2: Table with Embedded Distribution Bars</a>
+  <ul class="collapse">
+  <li><a href="#implementation-comparison-many-categories-across-multiple-indicators" id="toc-implementation-comparison-many-categories-across-multiple-indicators" class="nav-link" data-scroll-target="#implementation-comparison-many-categories-across-multiple-indicators">Implementation (Comparison: Many Categories across Multiple Indicators)</a></li>
+  <li><a href="#analytical-takeaway-1" id="toc-analytical-takeaway-1" class="nav-link" data-scroll-target="#analytical-takeaway-1">Analytical Takeaway</a></li>
+  </ul></li>
+  <li><a href="#chart-3-horizontal-bar-chart-of-ranked-cohorts" id="toc-chart-3-horizontal-bar-chart-of-ranked-cohorts" class="nav-link" data-scroll-target="#chart-3-horizontal-bar-chart-of-ranked-cohorts">Chart 3: Horizontal Bar Chart of Ranked Cohorts</a>
+  <ul class="collapse">
+  <li><a href="#implementation-comparison-one-variable-many-items" id="toc-implementation-comparison-one-variable-many-items" class="nav-link" data-scroll-target="#implementation-comparison-one-variable-many-items">Implementation (Comparison: One Variable, Many Items)</a></li>
+  <li><a href="#analytical-takeaway-2" id="toc-analytical-takeaway-2" class="nav-link" data-scroll-target="#analytical-takeaway-2">Analytical Takeaway</a></li>
+  </ul></li>
+  <li><a href="#computational-environment-and-session-info" id="toc-computational-environment-and-session-info" class="nav-link" data-scroll-target="#computational-environment-and-session-info">Computational Environment and Session Info</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">assign04</h1>
+<div class="quarto-title-block"><div><h1 class="title">48-Hour Chart Hackathon: Visualizing the Happy Planet Index</h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li><li><hr class="dropdown-divider"></li><li><a id="quarto-view-source" class="dropdown-item" href="javascript:void(0)" role="button">View Source</a></li></ul></div></div>
+<p class="subtitle lead">EPPS 6356 Data Visualization | Assignment 4</p>
 </div>
 
 
 
 <div class="quarto-title-meta">
 
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Team Hackathon (Nedret Sen-Cavus, Anugraha Samuel Gloria,Shao-Kang) </p>
+          </div>
+  </div>
     
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">October 2, 2026</p>
+    </div>
+  </div>
   
     
   </div>
@@ -156,8 +256,1506 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
+<p>## Executive Overview</p>
+<p>This report completes Assignment 4 (48-Hour Chart Hackathon) for EPPS 6356 Data Visualization. We implement the core chart paradigms from Andrew Abela’s <em>Chart Thought-Starter</em> (Comparison: Among Items branch) using the Happy Planet Index (HPI) dataset. All figures share a unified styling system defined in <code>R/theme.R</code>, adhere to Edward Tufte’s data-ink maximization[cite: 4, 16], utilize color-blind safe palettes (Okabe &amp; Ito 2008)[cite: 11], and encode comparisons along common spatial baselines (Cleveland &amp; McGill 1984).</p>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Load Dependencies, Theme, and Processed Datasets</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pal_okabe_ito <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"orange"</span>        <span class="ot">=</span> <span class="st">"#E69F00"</span>,</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"sky_blue"</span>      <span class="ot">=</span> <span class="st">"#56B4E9"</span>,</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"bluish_green"</span>  <span class="ot">=</span> <span class="st">"#009E73"</span>,</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">"yellow"</span>        <span class="ot">=</span> <span class="st">"#F0E442"</span>,</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">"blue"</span>          <span class="ot">=</span> <span class="st">"#0072B2"</span>,</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">"vermilion"</span>     <span class="ot">=</span> <span class="st">"#D55E00"</span>,</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="st">"reddish_purple"</span><span class="ot">=</span> <span class="st">"#CC79A7"</span>,</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="st">"dark_gray"</span>     <span class="ot">=</span> <span class="st">"#333333"</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>pal_continent <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Africa"</span>   <span class="ot">=</span> <span class="st">"#E69F00"</span>, <span class="co"># Orange</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Americas"</span> <span class="ot">=</span> <span class="st">"#56B4E9"</span>, <span class="co"># Sky Blue</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Asia"</span>     <span class="ot">=</span> <span class="st">"#009E73"</span>, <span class="co"># Bluish Green</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Europe"</span>   <span class="ot">=</span> <span class="st">"#0072B2"</span>, <span class="co"># Blue</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Oceania"</span>  <span class="ot">=</span> <span class="st">"#CC79A7"</span>  <span class="co"># Reddish Purple</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>pal_rank_comparison <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Top 20"</span>    <span class="ot">=</span> <span class="st">"#009E73"</span>, <span class="co"># Greenish (high wellbeing / sustainable efficiency)</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Bottom 20"</span> <span class="ot">=</span> <span class="st">"#D55E00"</span>  <span class="co"># Vermilion (low wellbeing / high footprint)</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>scale_fill_continent <span class="ot">&lt;-</span> <span class="cf">function</span>(...) {</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> pal_continent, ...)</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>scale_color_continent <span class="ot">&lt;-</span> <span class="cf">function</span>(...) {</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> pal_continent, ...)</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>scale_fill_hackathon <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">values =</span> pal_okabe_ito, ...) {</span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> values, ...)</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>scale_color_hackathon <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">values =</span> pal_okabe_ito, ...) {</span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> values, ...)</span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a><span class="fu">suppressPackageStartupMessages</span>({</span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">library</span>(dplyr)</span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>  <span class="fu">library</span>(tidyr)</span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>  <span class="fu">library</span>(forcats)</span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>  <span class="fu">library</span>(scales)</span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>  <span class="fu">library</span>(gt)</span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>  <span class="fu">library</span>(gtExtras)</span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a>hpi_clean     <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"../data/hpi_clean.rds"</span>)</span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a>df_chart1     <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"../data/hpi_chart1.rds"</span>)</span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>df_chart2_raw <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"../data/hpi_chart2.rds"</span>)</span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a>df_chart3_raw <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"../data/hpi_chart3.rds"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<hr>
+<p>## Chart 1: Variable-Width Column Chart</p>
+<p>### Implementation (Comparison: Two Variables per Item)</p>
+<p>Chart 1 maps two continuous macro-demographic dimensions simultaneously using <code>geom_rect()</code>: continental population determines rectangle width (<span class="math inline">\(W_i = xmax_i - xmin_i\)</span>), while population-weighted Happy Planet Index determines column height (<span class="math inline">\(ymax_i\)</span>)[cite: 4, 5]. Interior polygon text has been eliminated to maximize the data-ink ratio and prevent label clipping across narrower columns (e.g., Oceania)[cite: 4, 5].</p>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Render Chart 1: geom_rect() Variable-Width Columns</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>theme_hackathon <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">base_size =</span> <span class="dv">11</span>,</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>                            <span class="at">base_family =</span> <span class="st">"sans"</span>,</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>                            <span class="at">axis_slant =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>                            <span class="at">legend_pos =</span> <span class="st">"top"</span>) {</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  th <span class="ot">&lt;-</span> <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> base_size, <span class="at">base_family =</span> base_family) <span class="sc">%+replace%</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>      <span class="at">plot.title =</span> <span class="fu">element_text</span>(</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>        <span class="at">size =</span> <span class="fu">rel</span>(<span class="fl">1.30</span>),</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>        <span class="at">face =</span> <span class="st">"bold"</span>,</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>        <span class="at">color =</span> <span class="st">"#111111"</span>,</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>        <span class="at">hjust =</span> <span class="dv">0</span>,</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>        <span class="at">margin =</span> <span class="fu">margin</span>(<span class="at">b =</span> <span class="dv">6</span>)</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>      ),</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>      <span class="at">plot.subtitle =</span> <span class="fu">element_text</span>(</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>        <span class="at">size =</span> <span class="fu">rel</span>(<span class="fl">0.95</span>),</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>        <span class="at">color =</span> <span class="st">"#444444"</span>,</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>        <span class="at">hjust =</span> <span class="dv">0</span>,</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>        <span class="at">margin =</span> <span class="fu">margin</span>(<span class="at">b =</span> <span class="dv">12</span>)</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>      ),</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>      <span class="at">plot.caption =</span> <span class="fu">element_text</span>(</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>        <span class="at">size =</span> <span class="fu">rel</span>(<span class="fl">0.75</span>),</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>        <span class="at">color =</span> <span class="st">"#666666"</span>,</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>        <span class="at">hjust =</span> <span class="dv">0</span>,</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>        <span class="at">margin =</span> <span class="fu">margin</span>(<span class="at">t =</span> <span class="dv">12</span>)</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>      ),</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>      <span class="at">axis.title.x =</span> <span class="fu">element_text</span>(</span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>        <span class="at">size =</span> <span class="fu">rel</span>(<span class="fl">0.90</span>),</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>        <span class="at">face =</span> <span class="st">"bold"</span>,</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>        <span class="at">color =</span> <span class="st">"#222222"</span>,</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>        <span class="at">margin =</span> <span class="fu">margin</span>(<span class="at">t =</span> <span class="dv">8</span>)</span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>      ),</span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>      <span class="at">axis.title.y =</span> <span class="fu">element_text</span>(</span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>        <span class="at">size =</span> <span class="fu">rel</span>(<span class="fl">0.90</span>),</span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>        <span class="at">face =</span> <span class="st">"bold"</span>,</span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>        <span class="at">color =</span> <span class="st">"#222222"</span>,</span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>        <span class="at">margin =</span> <span class="fu">margin</span>(<span class="at">r =</span> <span class="dv">8</span>)</span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>      ),</span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>      <span class="at">axis.text =</span> <span class="fu">element_text</span>(</span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>        <span class="at">size =</span> <span class="fu">rel</span>(<span class="fl">0.82</span>),</span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>        <span class="at">color =</span> <span class="st">"#333333"</span></span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>      ),</span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>      <span class="at">axis.line =</span> <span class="fu">element_line</span>(</span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>        <span class="at">color =</span> <span class="st">"#777777"</span>,</span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>        <span class="at">linewidth =</span> <span class="fl">0.45</span></span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a>      ),</span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a>      <span class="at">axis.ticks =</span> <span class="fu">element_line</span>(</span>
+<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a>        <span class="at">color =</span> <span class="st">"#777777"</span>,</span>
+<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a>        <span class="at">linewidth =</span> <span class="fl">0.40</span></span>
+<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a>      ),</span>
+<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a>      <span class="at">panel.grid.major =</span> <span class="fu">element_line</span>(</span>
+<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a>        <span class="at">color =</span> <span class="st">"#ECECEC"</span>,</span>
+<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a>        <span class="at">linewidth =</span> <span class="fl">0.35</span></span>
+<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a>      ),</span>
+<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a>      <span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a>      <span class="at">panel.background =</span> <span class="fu">element_rect</span>(</span>
+<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a>        <span class="at">fill =</span> <span class="st">"#FFFFFF"</span>,</span>
+<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a>        <span class="at">color =</span> <span class="cn">NA</span></span>
+<span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a>      ),</span>
+<span id="cb2-62"><a href="#cb2-62" aria-hidden="true" tabindex="-1"></a>      <span class="at">plot.background =</span> <span class="fu">element_rect</span>(</span>
+<span id="cb2-63"><a href="#cb2-63" aria-hidden="true" tabindex="-1"></a>        <span class="at">fill =</span> <span class="st">"#FFFFFF"</span>,</span>
+<span id="cb2-64"><a href="#cb2-64" aria-hidden="true" tabindex="-1"></a>        <span class="at">color =</span> <span class="cn">NA</span></span>
+<span id="cb2-65"><a href="#cb2-65" aria-hidden="true" tabindex="-1"></a>      ),</span>
+<span id="cb2-66"><a href="#cb2-66" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb2-67"><a href="#cb2-67" aria-hidden="true" tabindex="-1"></a>      <span class="at">legend.position =</span> legend_pos,</span>
+<span id="cb2-68"><a href="#cb2-68" aria-hidden="true" tabindex="-1"></a>      <span class="at">legend.title =</span> <span class="fu">element_text</span>(</span>
+<span id="cb2-69"><a href="#cb2-69" aria-hidden="true" tabindex="-1"></a>        <span class="at">size =</span> <span class="fu">rel</span>(<span class="fl">0.85</span>),</span>
+<span id="cb2-70"><a href="#cb2-70" aria-hidden="true" tabindex="-1"></a>        <span class="at">face =</span> <span class="st">"bold"</span>,</span>
+<span id="cb2-71"><a href="#cb2-71" aria-hidden="true" tabindex="-1"></a>        <span class="at">color =</span> <span class="st">"#222222"</span></span>
+<span id="cb2-72"><a href="#cb2-72" aria-hidden="true" tabindex="-1"></a>      ),</span>
+<span id="cb2-73"><a href="#cb2-73" aria-hidden="true" tabindex="-1"></a>      <span class="at">legend.text =</span> <span class="fu">element_text</span>(</span>
+<span id="cb2-74"><a href="#cb2-74" aria-hidden="true" tabindex="-1"></a>        <span class="at">size =</span> <span class="fu">rel</span>(<span class="fl">0.80</span>),</span>
+<span id="cb2-75"><a href="#cb2-75" aria-hidden="true" tabindex="-1"></a>        <span class="at">color =</span> <span class="st">"#333333"</span></span>
+<span id="cb2-76"><a href="#cb2-76" aria-hidden="true" tabindex="-1"></a>      ),</span>
+<span id="cb2-77"><a href="#cb2-77" aria-hidden="true" tabindex="-1"></a>      <span class="at">legend.key =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb2-78"><a href="#cb2-78" aria-hidden="true" tabindex="-1"></a>      <span class="at">legend.background =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb2-79"><a href="#cb2-79" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb2-80"><a href="#cb2-80" aria-hidden="true" tabindex="-1"></a>      <span class="at">strip.background =</span> <span class="fu">element_rect</span>(</span>
+<span id="cb2-81"><a href="#cb2-81" aria-hidden="true" tabindex="-1"></a>        <span class="at">fill =</span> <span class="st">"#F2F4F8"</span>,</span>
+<span id="cb2-82"><a href="#cb2-82" aria-hidden="true" tabindex="-1"></a>        <span class="at">color =</span> <span class="cn">NA</span></span>
+<span id="cb2-83"><a href="#cb2-83" aria-hidden="true" tabindex="-1"></a>      ),</span>
+<span id="cb2-84"><a href="#cb2-84" aria-hidden="true" tabindex="-1"></a>      <span class="at">strip.text =</span> <span class="fu">element_text</span>(</span>
+<span id="cb2-85"><a href="#cb2-85" aria-hidden="true" tabindex="-1"></a>        <span class="at">size =</span> <span class="fu">rel</span>(<span class="fl">0.88</span>),</span>
+<span id="cb2-86"><a href="#cb2-86" aria-hidden="true" tabindex="-1"></a>        <span class="at">face =</span> <span class="st">"bold"</span>,</span>
+<span id="cb2-87"><a href="#cb2-87" aria-hidden="true" tabindex="-1"></a>        <span class="at">color =</span> <span class="st">"#222222"</span>,</span>
+<span id="cb2-88"><a href="#cb2-88" aria-hidden="true" tabindex="-1"></a>        <span class="at">margin =</span> <span class="fu">margin</span>(<span class="at">t =</span> <span class="dv">4</span>, <span class="at">b =</span> <span class="dv">4</span>)</span>
+<span id="cb2-89"><a href="#cb2-89" aria-hidden="true" tabindex="-1"></a>      ),</span>
+<span id="cb2-90"><a href="#cb2-90" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb2-91"><a href="#cb2-91" aria-hidden="true" tabindex="-1"></a>      <span class="at">plot.margin =</span> <span class="fu">margin</span>(<span class="at">t =</span> <span class="dv">16</span>, <span class="at">r =</span> <span class="dv">18</span>, <span class="at">b =</span> <span class="dv">14</span>, <span class="at">l =</span> <span class="dv">16</span>),</span>
+<span id="cb2-92"><a href="#cb2-92" aria-hidden="true" tabindex="-1"></a>      <span class="at">plot.title.position =</span> <span class="st">"plot"</span>,</span>
+<span id="cb2-93"><a href="#cb2-93" aria-hidden="true" tabindex="-1"></a>      <span class="at">plot.caption.position =</span> <span class="st">"plot"</span></span>
+<span id="cb2-94"><a href="#cb2-94" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb2-95"><a href="#cb2-95" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-96"><a href="#cb2-96" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">isTRUE</span>(axis_slant)) {</span>
+<span id="cb2-97"><a href="#cb2-97" aria-hidden="true" tabindex="-1"></a>    th <span class="ot">&lt;-</span> th <span class="sc">+</span> <span class="fu">theme</span>(</span>
+<span id="cb2-98"><a href="#cb2-98" aria-hidden="true" tabindex="-1"></a>      <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>, <span class="at">vjust =</span> <span class="dv">1</span>)</span>
+<span id="cb2-99"><a href="#cb2-99" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb2-100"><a href="#cb2-100" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb2-101"><a href="#cb2-101" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-102"><a href="#cb2-102" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(th)</span>
+<span id="cb2-103"><a href="#cb2-103" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-104"><a href="#cb2-104" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-105"><a href="#cb2-105" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df_chart1) <span class="sc">+</span></span>
+<span id="cb2-106"><a href="#cb2-106" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_rect</span>(</span>
+<span id="cb2-107"><a href="#cb2-107" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(</span>
+<span id="cb2-108"><a href="#cb2-108" aria-hidden="true" tabindex="-1"></a>      <span class="at">xmin =</span> xmin,</span>
+<span id="cb2-109"><a href="#cb2-109" aria-hidden="true" tabindex="-1"></a>      <span class="at">xmax =</span> xmax,</span>
+<span id="cb2-110"><a href="#cb2-110" aria-hidden="true" tabindex="-1"></a>      <span class="at">ymin =</span> <span class="dv">0</span>,</span>
+<span id="cb2-111"><a href="#cb2-111" aria-hidden="true" tabindex="-1"></a>      <span class="at">ymax =</span> ymax,</span>
+<span id="cb2-112"><a href="#cb2-112" aria-hidden="true" tabindex="-1"></a>      <span class="at">fill =</span> continent</span>
+<span id="cb2-113"><a href="#cb2-113" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb2-114"><a href="#cb2-114" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"#FFFFFF"</span>,</span>
+<span id="cb2-115"><a href="#cb2-115" aria-hidden="true" tabindex="-1"></a>    <span class="at">linewidth =</span> <span class="fl">0.7</span></span>
+<span id="cb2-116"><a href="#cb2-116" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb2-117"><a href="#cb2-117" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(</span>
+<span id="cb2-118"><a href="#cb2-118" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(</span>
+<span id="cb2-119"><a href="#cb2-119" aria-hidden="true" tabindex="-1"></a>      <span class="at">x =</span> xcenter,</span>
+<span id="cb2-120"><a href="#cb2-120" aria-hidden="true" tabindex="-1"></a>      <span class="at">y =</span> ymax <span class="sc">+</span> <span class="fl">1.6</span>,</span>
+<span id="cb2-121"><a href="#cb2-121" aria-hidden="true" tabindex="-1"></a>      <span class="at">label =</span> <span class="fu">sprintf</span>(<span class="st">"%.1f"</span>, ymax)</span>
+<span id="cb2-122"><a href="#cb2-122" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb2-123"><a href="#cb2-123" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"#222222"</span>,</span>
+<span id="cb2-124"><a href="#cb2-124" aria-hidden="true" tabindex="-1"></a>    <span class="at">fontface =</span> <span class="st">"bold"</span>,</span>
+<span id="cb2-125"><a href="#cb2-125" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="fl">3.4</span></span>
+<span id="cb2-126"><a href="#cb2-126" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb2-127"><a href="#cb2-127" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_continent</span>(<span class="at">name =</span> <span class="st">"Continent"</span>) <span class="sc">+</span></span>
+<span id="cb2-128"><a href="#cb2-128" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(</span>
+<span id="cb2-129"><a href="#cb2-129" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> <span class="st">"Cumulative Global Population (Millions)"</span>,</span>
+<span id="cb2-130"><a href="#cb2-130" aria-hidden="true" tabindex="-1"></a>    <span class="at">expand =</span> <span class="fu">expansion</span>(<span class="at">mult =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.02</span>)),</span>
+<span id="cb2-131"><a href="#cb2-131" aria-hidden="true" tabindex="-1"></a>    <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">5000</span>, <span class="at">by =</span> <span class="dv">1000</span>),</span>
+<span id="cb2-132"><a href="#cb2-132" aria-hidden="true" tabindex="-1"></a>    <span class="at">labels =</span> <span class="fu">comma_format</span>(<span class="at">suffix =</span> <span class="st">"M"</span>)</span>
+<span id="cb2-133"><a href="#cb2-133" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb2-134"><a href="#cb2-134" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(</span>
+<span id="cb2-135"><a href="#cb2-135" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> <span class="st">"Population-Weighted Mean HPI (Score: 0–100)"</span>,</span>
+<span id="cb2-136"><a href="#cb2-136" aria-hidden="true" tabindex="-1"></a>    <span class="at">expand =</span> <span class="fu">expansion</span>(<span class="at">mult =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.05</span>)),</span>
+<span id="cb2-137"><a href="#cb2-137" aria-hidden="true" tabindex="-1"></a>    <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">75</span>),</span>
+<span id="cb2-138"><a href="#cb2-138" aria-hidden="true" tabindex="-1"></a>    <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">70</span>, <span class="at">by =</span> <span class="dv">10</span>)</span>
+<span id="cb2-139"><a href="#cb2-139" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb2-140"><a href="#cb2-140" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb2-141"><a href="#cb2-141" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"The Americas Deliver Highest Wellbeing Efficiency Despite Lower Demographic Scale"</span>,</span>
+<span id="cb2-142"><a href="#cb2-142" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Width represents total continent population; Column height reflects population-weighted Happy Planet Index."</span>,</span>
+<span id="cb2-143"><a href="#cb2-143" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"Source: Happy Planet Index (2024 Edition) &amp; UN Population Division | EPPS 6356 Hackathon"</span></span>
+<span id="cb2-144"><a href="#cb2-144" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb2-145"><a href="#cb2-145" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_hackathon</span>(<span class="at">legend_pos =</span> <span class="st">"top"</span>) <span class="sc">+</span></span>
+<span id="cb2-146"><a href="#cb2-146" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb2-147"><a href="#cb2-147" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.title.y =</span> <span class="fu">element_text</span>(</span>
+<span id="cb2-148"><a href="#cb2-148" aria-hidden="true" tabindex="-1"></a>      <span class="at">angle =</span> <span class="dv">90</span>,</span>
+<span id="cb2-149"><a href="#cb2-149" aria-hidden="true" tabindex="-1"></a>      <span class="at">vjust =</span> <span class="dv">2</span>,</span>
+<span id="cb2-150"><a href="#cb2-150" aria-hidden="true" tabindex="-1"></a>      <span class="at">margin =</span> <span class="fu">margin</span>(<span class="at">r =</span> <span class="dv">10</span>)</span>
+<span id="cb2-151"><a href="#cb2-151" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb2-152"><a href="#cb2-152" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">size =</span> <span class="fu">rel</span>(<span class="fl">0.85</span>)),</span>
+<span id="cb2-153"><a href="#cb2-153" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.margin =</span> <span class="fu">margin</span>(<span class="at">b =</span> <span class="dv">4</span>)</span>
+<span id="cb2-154"><a href="#cb2-154" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb2-155"><a href="#cb2-155" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-156"><a href="#cb2-156" aria-hidden="true" tabindex="-1"></a>p1</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="assign04_files/figure-html/chart-1-variable-width-1.png" class="img-fluid figure-img" width="1008"></p>
+</figure>
+</div>
+</div>
+</div>
+<section id="analytical-takeaway" class="level3">
+<h3 class="anchored" data-anchor-id="analytical-takeaway">Analytical Takeaway</h3>
+<ul>
+<li><strong>Demographic Scale vs.&nbsp;Ecological Efficiency:</strong> While Asia represents over 60% of the sample’s population (<span class="math inline">\(\approx 3.9\)</span> billion people), its aggregate HPI (44.6) is heavily constrained by industrial carbon throughput. In contrast, the Americas achieve the highest population-weighted efficiency (49.8), demonstrating that high human wellbeing can be sustained at lower ecological impact.</li>
+</ul>
+<hr>
+</section>
+<section id="chart-2-table-with-embedded-distribution-bars" class="level2">
+<h2 class="anchored" data-anchor-id="chart-2-table-with-embedded-distribution-bars">Chart 2: Table with Embedded Distribution Bars</h2>
+<section id="implementation-comparison-many-categories-across-multiple-indicators" class="level3">
+<h3 class="anchored" data-anchor-id="implementation-comparison-many-categories-across-multiple-indicators">Implementation (Comparison: Many Categories across Multiple Indicators)</h3>
+<p>Chart 2 presents 25 representative nations across development tiers. Built with <code>gt</code> and <code>gtExtras</code>, it embeds inline distribution bars directly into the data matrix, enabling pre-attentive length decoding along an aligned baseline while maintaining analytical precision[cite: 4, 10].</p>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Render Chart 2: gt + gtExtras Formatted Data Table</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>df_table <span class="ot">&lt;-</span> df_chart2_raw <span class="sc">%&gt;%</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(hpi)) <span class="sc">%&gt;%</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">footprint_bar =</span> (footprint <span class="sc">/</span> <span class="fu">max</span>(footprint)) <span class="sc">*</span> <span class="dv">100</span>,</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">hpi_bar =</span> hpi</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    country, continent, hpi, hpi_bar,</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    life_exp, wellbeing, footprint, footprint_bar, gdp_pc</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>tbl_hpi <span class="ot">&lt;-</span> df_table <span class="sc">%&gt;%</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_header</span>(</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="fu">md</span>(<span class="st">"**High National Income Fails to Guarantee Ecological Efficiency Across Global Economies**"</span>),</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Benchmarking 25 representative economies across life expectancy, ladder-of-life wellbeing, and ecological footprint"</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cols_label</span>(</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">country =</span> <span class="st">"Country"</span>,</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">continent =</span> <span class="st">"Continent"</span>,</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">hpi =</span> <span class="st">"HPI Score"</span>,</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">hpi_bar =</span> <span class="st">"Efficiency Bar"</span>,</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">life_exp =</span> <span class="st">"Life Expectancy (Years)"</span>,</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">wellbeing =</span> <span class="st">"Wellbeing (0–10)"</span>,</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">footprint =</span> <span class="st">"Footprint (gha/capita)"</span>,</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">footprint_bar =</span> <span class="st">"Pressure Bar"</span>,</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">gdp_pc =</span> <span class="st">"GDP per Capita (USD)"</span></span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cols_width</span>(</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>    country <span class="sc">~</span> <span class="fu">px</span>(<span class="dv">130</span>),</span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>    continent <span class="sc">~</span> <span class="fu">px</span>(<span class="dv">95</span>),</span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>    hpi <span class="sc">~</span> <span class="fu">px</span>(<span class="dv">70</span>),</span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>    hpi_bar <span class="sc">~</span> <span class="fu">px</span>(<span class="dv">105</span>),</span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>    life_exp <span class="sc">~</span> <span class="fu">px</span>(<span class="dv">100</span>),</span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>    wellbeing <span class="sc">~</span> <span class="fu">px</span>(<span class="dv">80</span>),</span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>    footprint <span class="sc">~</span> <span class="fu">px</span>(<span class="dv">95</span>),</span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>    footprint_bar <span class="sc">~</span> <span class="fu">px</span>(<span class="dv">105</span>),</span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>    gdp_pc <span class="sc">~</span> <span class="fu">px</span>(<span class="dv">120</span>)</span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fmt_number</span>(</span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>    <span class="at">columns =</span> <span class="fu">c</span>(hpi, life_exp, wellbeing),</span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>    <span class="at">decimals =</span> <span class="dv">1</span></span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fmt_number</span>(</span>
+<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a>    <span class="at">columns =</span> <span class="fu">c</span>(footprint),</span>
+<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a>    <span class="at">decimals =</span> <span class="dv">2</span></span>
+<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fmt_currency</span>(</span>
+<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a>    <span class="at">columns =</span> <span class="fu">c</span>(gdp_pc),</span>
+<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a>    <span class="at">currency =</span> <span class="st">"USD"</span>,</span>
+<span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a>    <span class="at">decimals =</span> <span class="dv">0</span></span>
+<span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb3-53"><a href="#cb3-53" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt_plt_bar_pct</span>(</span>
+<span id="cb3-54"><a href="#cb3-54" aria-hidden="true" tabindex="-1"></a>    <span class="at">column =</span> hpi_bar,</span>
+<span id="cb3-55"><a href="#cb3-55" aria-hidden="true" tabindex="-1"></a>    <span class="at">scaled =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb3-56"><a href="#cb3-56" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"#0072B2"</span>,</span>
+<span id="cb3-57"><a href="#cb3-57" aria-hidden="true" tabindex="-1"></a>    <span class="at">background =</span> <span class="st">"#EAEAEA"</span>,</span>
+<span id="cb3-58"><a href="#cb3-58" aria-hidden="true" tabindex="-1"></a>    <span class="at">height =</span> <span class="dv">14</span></span>
+<span id="cb3-59"><a href="#cb3-59" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb3-60"><a href="#cb3-60" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt_plt_bar_pct</span>(</span>
+<span id="cb3-61"><a href="#cb3-61" aria-hidden="true" tabindex="-1"></a>    <span class="at">column =</span> footprint_bar,</span>
+<span id="cb3-62"><a href="#cb3-62" aria-hidden="true" tabindex="-1"></a>    <span class="at">scaled =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb3-63"><a href="#cb3-63" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"#D55E00"</span>,</span>
+<span id="cb3-64"><a href="#cb3-64" aria-hidden="true" tabindex="-1"></a>    <span class="at">background =</span> <span class="st">"#EAEAEA"</span>,</span>
+<span id="cb3-65"><a href="#cb3-65" aria-hidden="true" tabindex="-1"></a>    <span class="at">height =</span> <span class="dv">14</span></span>
+<span id="cb3-66"><a href="#cb3-66" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb3-67"><a href="#cb3-67" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt_badge</span>(</span>
+<span id="cb3-68"><a href="#cb3-68" aria-hidden="true" tabindex="-1"></a>    <span class="at">column =</span> continent,</span>
+<span id="cb3-69"><a href="#cb3-69" aria-hidden="true" tabindex="-1"></a>    <span class="at">palette =</span> pal_continent</span>
+<span id="cb3-70"><a href="#cb3-70" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb3-71"><a href="#cb3-71" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cols_align</span>(</span>
+<span id="cb3-72"><a href="#cb3-72" aria-hidden="true" tabindex="-1"></a>    <span class="at">align =</span> <span class="st">"left"</span>,</span>
+<span id="cb3-73"><a href="#cb3-73" aria-hidden="true" tabindex="-1"></a>    <span class="at">columns =</span> <span class="fu">c</span>(country, continent)</span>
+<span id="cb3-74"><a href="#cb3-74" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb3-75"><a href="#cb3-75" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cols_align</span>(</span>
+<span id="cb3-76"><a href="#cb3-76" aria-hidden="true" tabindex="-1"></a>    <span class="at">align =</span> <span class="st">"center"</span>,</span>
+<span id="cb3-77"><a href="#cb3-77" aria-hidden="true" tabindex="-1"></a>    <span class="at">columns =</span> <span class="fu">c</span>(hpi, hpi_bar, footprint, footprint_bar)</span>
+<span id="cb3-78"><a href="#cb3-78" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb3-79"><a href="#cb3-79" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cols_align</span>(</span>
+<span id="cb3-80"><a href="#cb3-80" aria-hidden="true" tabindex="-1"></a>    <span class="at">align =</span> <span class="st">"right"</span>,</span>
+<span id="cb3-81"><a href="#cb3-81" aria-hidden="true" tabindex="-1"></a>    <span class="at">columns =</span> <span class="fu">c</span>(life_exp, wellbeing, gdp_pc)</span>
+<span id="cb3-82"><a href="#cb3-82" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb3-83"><a href="#cb3-83" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_options</span>(</span>
+<span id="cb3-84"><a href="#cb3-84" aria-hidden="true" tabindex="-1"></a>    <span class="at">table.width =</span> <span class="fu">px</span>(<span class="dv">900</span>),</span>
+<span id="cb3-85"><a href="#cb3-85" aria-hidden="true" tabindex="-1"></a>    <span class="at">table.font.names =</span> <span class="st">"sans-serif"</span>,</span>
+<span id="cb3-86"><a href="#cb3-86" aria-hidden="true" tabindex="-1"></a>    <span class="at">table.font.size =</span> <span class="fu">px</span>(<span class="dv">13</span>),</span>
+<span id="cb3-87"><a href="#cb3-87" aria-hidden="true" tabindex="-1"></a>    <span class="at">heading.title.font.size =</span> <span class="fu">px</span>(<span class="dv">17</span>),</span>
+<span id="cb3-88"><a href="#cb3-88" aria-hidden="true" tabindex="-1"></a>    <span class="at">heading.title.font.weight =</span> <span class="st">"bold"</span>,</span>
+<span id="cb3-89"><a href="#cb3-89" aria-hidden="true" tabindex="-1"></a>    <span class="at">heading.subtitle.font.size =</span> <span class="fu">px</span>(<span class="dv">13</span>),</span>
+<span id="cb3-90"><a href="#cb3-90" aria-hidden="true" tabindex="-1"></a>    <span class="at">heading.align =</span> <span class="st">"left"</span>,</span>
+<span id="cb3-91"><a href="#cb3-91" aria-hidden="true" tabindex="-1"></a>    <span class="at">column_labels.font.size =</span> <span class="fu">px</span>(<span class="dv">12</span>),</span>
+<span id="cb3-92"><a href="#cb3-92" aria-hidden="true" tabindex="-1"></a>    <span class="at">column_labels.font.weight =</span> <span class="st">"bold"</span>,</span>
+<span id="cb3-93"><a href="#cb3-93" aria-hidden="true" tabindex="-1"></a>    <span class="at">column_labels.background.color =</span> <span class="st">"#F4F6F9"</span>,</span>
+<span id="cb3-94"><a href="#cb3-94" aria-hidden="true" tabindex="-1"></a>    <span class="at">row.striping.include_table_body =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb3-95"><a href="#cb3-95" aria-hidden="true" tabindex="-1"></a>    <span class="at">row.striping.background_color =</span> <span class="st">"#FAFAFA"</span>,</span>
+<span id="cb3-96"><a href="#cb3-96" aria-hidden="true" tabindex="-1"></a>    <span class="at">table.border.top.style =</span> <span class="st">"solid"</span>,</span>
+<span id="cb3-97"><a href="#cb3-97" aria-hidden="true" tabindex="-1"></a>    <span class="at">table.border.top.color =</span> <span class="st">"#333333"</span>,</span>
+<span id="cb3-98"><a href="#cb3-98" aria-hidden="true" tabindex="-1"></a>    <span class="at">table.border.top.width =</span> <span class="fu">px</span>(<span class="dv">2</span>),</span>
+<span id="cb3-99"><a href="#cb3-99" aria-hidden="true" tabindex="-1"></a>    <span class="at">table.border.bottom.style =</span> <span class="st">"solid"</span>,</span>
+<span id="cb3-100"><a href="#cb3-100" aria-hidden="true" tabindex="-1"></a>    <span class="at">table.border.bottom.color =</span> <span class="st">"#333333"</span>,</span>
+<span id="cb3-101"><a href="#cb3-101" aria-hidden="true" tabindex="-1"></a>    <span class="at">table.border.bottom.width =</span> <span class="fu">px</span>(<span class="dv">2</span>),</span>
+<span id="cb3-102"><a href="#cb3-102" aria-hidden="true" tabindex="-1"></a>    <span class="at">data_row.padding =</span> <span class="fu">px</span>(<span class="dv">5</span>)</span>
+<span id="cb3-103"><a href="#cb3-103" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb3-104"><a href="#cb3-104" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_source_note</span>(</span>
+<span id="cb3-105"><a href="#cb3-105" aria-hidden="true" tabindex="-1"></a>    <span class="at">source_note =</span> <span class="fu">md</span>(<span class="st">"Source: Happy Planet Index 2024; World Bank Development Indicators. Table compiled for EPPS 6356 Chart Hackathon."</span>)</span>
+<span id="cb3-106"><a href="#cb3-106" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb3-107"><a href="#cb3-107" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-108"><a href="#cb3-108" aria-hidden="true" tabindex="-1"></a>tbl_hpi</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div id="dknhjfxqjv" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#dknhjfxqjv table {
+  font-family: sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#dknhjfxqjv thead, #dknhjfxqjv tbody, #dknhjfxqjv tfoot, #dknhjfxqjv tr, #dknhjfxqjv td, #dknhjfxqjv th {
+  border-style: none;
+}
+
+#dknhjfxqjv p {
+  margin: 0;
+  padding: 0;
+}
+
+#dknhjfxqjv .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 13px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: 900px;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #333333;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #333333;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#dknhjfxqjv .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#dknhjfxqjv .gt_title {
+  color: #333333;
+  font-size: 17px;
+  font-weight: bold;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#dknhjfxqjv .gt_subtitle {
+  color: #333333;
+  font-size: 13px;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#dknhjfxqjv .gt_heading {
+  background-color: #FFFFFF;
+  text-align: left;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#dknhjfxqjv .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#dknhjfxqjv .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#dknhjfxqjv .gt_col_heading {
+  color: #333333;
+  background-color: #F4F6F9;
+  font-size: 12px;
+  font-weight: bold;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#dknhjfxqjv .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #F4F6F9;
+  font-size: 12px;
+  font-weight: bold;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#dknhjfxqjv .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#dknhjfxqjv .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#dknhjfxqjv .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#dknhjfxqjv .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#dknhjfxqjv .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#dknhjfxqjv .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#dknhjfxqjv .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#dknhjfxqjv .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#dknhjfxqjv .gt_row {
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#dknhjfxqjv .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#dknhjfxqjv .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#dknhjfxqjv .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#dknhjfxqjv .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#dknhjfxqjv .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#dknhjfxqjv .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#dknhjfxqjv .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#dknhjfxqjv .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#dknhjfxqjv .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#dknhjfxqjv .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#dknhjfxqjv .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#dknhjfxqjv .gt_striped {
+  background-color: #FAFAFA;
+}
+
+#dknhjfxqjv .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#dknhjfxqjv .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#dknhjfxqjv .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#dknhjfxqjv .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#dknhjfxqjv .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#dknhjfxqjv .gt_left {
+  text-align: left;
+}
+
+#dknhjfxqjv .gt_center {
+  text-align: center;
+}
+
+#dknhjfxqjv .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#dknhjfxqjv .gt_font_normal {
+  font-weight: normal;
+}
+
+#dknhjfxqjv .gt_font_bold {
+  font-weight: bold;
+}
+
+#dknhjfxqjv .gt_font_italic {
+  font-style: italic;
+}
+
+#dknhjfxqjv .gt_super {
+  font-size: 65%;
+}
+
+#dknhjfxqjv .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#dknhjfxqjv .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#dknhjfxqjv .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#dknhjfxqjv .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#dknhjfxqjv .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#dknhjfxqjv .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#dknhjfxqjv .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#dknhjfxqjv .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#dknhjfxqjv div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-bootstrap="false">
+<thead>
+<tr class="gt_heading header">
+<td colspan="9" class="gt_heading gt_title gt_font_normal"><strong>High National Income Fails to Guarantee Ecological Efficiency Across Global Economies</strong></td>
+</tr>
+<tr class="gt_heading even">
+<td colspan="9" class="gt_heading gt_subtitle gt_font_normal gt_bottom_border">Benchmarking 25 representative economies across life expectancy, ladder-of-life wellbeing, and ecological footprint</td>
+</tr>
+<tr class="gt_col_headings header">
+<th id="country" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">Country</th>
+<th id="continent" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">Continent</th>
+<th id="hpi" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col">HPI Score</th>
+<th id="hpi_bar" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col">Efficiency Bar</th>
+<th id="life_exp" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Life Expectancy (Years)</th>
+<th id="wellbeing" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Wellbeing (0–10)</th>
+<th id="footprint" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col">Footprint (gha/capita)</th>
+<th id="footprint_bar" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col">Pressure Bar</th>
+<th id="gdp_pc" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">GDP per Capita (USD)</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_left" headers="country">Costa Rica</td>
+<td class="gt_row gt_left" headers="continent"><div style="display: inline-block; padding: 2px 12px; border-radius: 15px; font-weight: 600; font-size: 12px; background:#56B4E933;">
+Americas
+</div></td>
+<td class="gt_row gt_center" headers="hpi">62.1</td>
+<td class="gt_row gt_center" headers="hpi_bar"><div style="flex-grow:1;margin-left:8px;background:#EAEAEA;">
+<div style="background:#0072B2;width:62.1%;height:14px;">
+
+</div>
+</div></td>
+<td class="gt_row gt_right" headers="life_exp">80.3</td>
+<td class="gt_row gt_right" headers="wellbeing">7.0</td>
+<td class="gt_row gt_center" headers="footprint">2.65</td>
+<td class="gt_row gt_center" headers="footprint_bar"><div style="flex-grow:1;margin-left:8px;background:#EAEAEA;">
+<div style="background:#D55E00;width:18.5314685314685%;height:14px;">
+
+</div>
+</div></td>
+<td class="gt_row gt_right" headers="gdp_pc">$20,300</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left gt_striped" headers="country">Vanuatu</td>
+<td class="gt_row gt_left gt_striped" headers="continent"><div style="display: inline-block; padding: 2px 12px; border-radius: 15px; font-weight: 600; font-size: 12px; background:#CC79A733;">
+Oceania
+</div></td>
+<td class="gt_row gt_center gt_striped" headers="hpi">60.4</td>
+<td class="gt_row gt_center gt_striped" headers="hpi_bar"><div style="flex-grow:1;margin-left:8px;background:#EAEAEA;">
+<div style="background:#0072B2;width:60.4%;height:14px;">
+
+</div>
+</div></td>
+<td class="gt_row gt_right gt_striped" headers="life_exp">70.5</td>
+<td class="gt_row gt_right gt_striped" headers="wellbeing">7.0</td>
+<td class="gt_row gt_center gt_striped" headers="footprint">1.62</td>
+<td class="gt_row gt_center gt_striped" headers="footprint_bar"><div style="flex-grow:1;margin-left:8px;background:#EAEAEA;">
+<div style="background:#D55E00;width:11.3286713286713%;height:14px;">
+
+</div>
+</div></td>
+<td class="gt_row gt_right gt_striped" headers="gdp_pc">$3,150</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country">Colombia</td>
+<td class="gt_row gt_left" headers="continent"><div style="display: inline-block; padding: 2px 12px; border-radius: 15px; font-weight: 600; font-size: 12px; background:#56B4E933;">
+Americas
+</div></td>
+<td class="gt_row gt_center" headers="hpi">60.2</td>
+<td class="gt_row gt_center" headers="hpi_bar"><div style="flex-grow:1;margin-left:8px;background:#EAEAEA;">
+<div style="background:#0072B2;width:60.2%;height:14px;">
+
+</div>
+</div></td>
+<td class="gt_row gt_right" headers="life_exp">77.3</td>
+<td class="gt_row gt_right" headers="wellbeing">6.3</td>
+<td class="gt_row gt_center" headers="footprint">1.90</td>
+<td class="gt_row gt_center" headers="footprint_bar"><div style="flex-grow:1;margin-left:8px;background:#EAEAEA;">
+<div style="background:#D55E00;width:13.2867132867133%;height:14px;">
+
+</div>
+</div></td>
+<td class="gt_row gt_right" headers="gdp_pc">$14,600</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left gt_striped" headers="country">Switzerland</td>
+<td class="gt_row gt_left gt_striped" headers="continent"><div style="display: inline-block; padding: 2px 12px; border-radius: 15px; font-weight: 600; font-size: 12px; background:#0072B233;">
+Europe
+</div></td>
+<td class="gt_row gt_center gt_striped" headers="hpi">60.1</td>
+<td class="gt_row gt_center gt_striped" headers="hpi_bar"><div style="flex-grow:1;margin-left:8px;background:#EAEAEA;">
+<div style="background:#0072B2;width:60.1%;height:14px;">
+
+</div>
+</div></td>
+<td class="gt_row gt_right gt_striped" headers="life_exp">83.8</td>
+<td class="gt_row gt_right gt_striped" headers="wellbeing">7.7</td>
+<td class="gt_row gt_center gt_striped" headers="footprint">4.14</td>
+<td class="gt_row gt_center gt_striped" headers="footprint_bar"><div style="flex-grow:1;margin-left:8px;background:#EAEAEA;">
+<div style="background:#D55E00;width:28.9510489510489%;height:14px;">
+
+</div>
+</div></td>
+<td class="gt_row gt_right gt_striped" headers="gdp_pc">$68,400</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country">Panama</td>
+<td class="gt_row gt_left" headers="continent"><div style="display: inline-block; padding: 2px 12px; border-radius: 15px; font-weight: 600; font-size: 12px; background:#56B4E933;">
+Americas
+</div></td>
+<td class="gt_row gt_center" headers="hpi">57.9</td>
+<td class="gt_row gt_center" headers="hpi_bar"><div style="flex-grow:1;margin-left:8px;background:#EAEAEA;">
+<div style="background:#0072B2;width:57.9%;height:14px;">
+
+</div>
+</div></td>
+<td class="gt_row gt_right" headers="life_exp">78.5</td>
+<td class="gt_row gt_right" headers="wellbeing">6.1</td>
+<td class="gt_row gt_center" headers="footprint">2.10</td>
+<td class="gt_row gt_center" headers="footprint_bar"><div style="flex-grow:1;margin-left:8px;background:#EAEAEA;">
+<div style="background:#D55E00;width:14.6853146853147%;height:14px;">
+
+</div>
+</div></td>
+<td class="gt_row gt_right" headers="gdp_pc">$31,500</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left gt_striped" headers="country">Philippines</td>
+<td class="gt_row gt_left gt_striped" headers="continent"><div style="display: inline-block; padding: 2px 12px; border-radius: 15px; font-weight: 600; font-size: 12px; background:#009E7333;">
+Asia
+</div></td>
+<td class="gt_row gt_center gt_striped" headers="hpi">53.2</td>
+<td class="gt_row gt_center gt_striped" headers="hpi_bar"><div style="flex-grow:1;margin-left:8px;background:#EAEAEA;">
+<div style="background:#0072B2;width:53.2%;height:14px;">
+
+</div>
+</div></td>
+<td class="gt_row gt_right gt_striped" headers="life_exp">71.2</td>
+<td class="gt_row gt_right gt_striped" headers="wellbeing">5.9</td>
+<td class="gt_row gt_center gt_striped" headers="footprint">1.45</td>
+<td class="gt_row gt_center gt_striped" headers="footprint_bar"><div style="flex-grow:1;margin-left:8px;background:#EAEAEA;">
+<div style="background:#D55E00;width:10.1398601398601%;height:14px;">
+
+</div>
+</div></td>
+<td class="gt_row gt_right gt_striped" headers="gdp_pc">$8,900</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country">Vietnam</td>
+<td class="gt_row gt_left" headers="continent"><div style="display: inline-block; padding: 2px 12px; border-radius: 15px; font-weight: 600; font-size: 12px; background:#009E7333;">
+Asia
+</div></td>
+<td class="gt_row gt_center" headers="hpi">52.7</td>
+<td class="gt_row gt_center" headers="hpi_bar"><div style="flex-grow:1;margin-left:8px;background:#EAEAEA;">
+<div style="background:#0072B2;width:52.7%;height:14px;">
+
+</div>
+</div></td>
+<td class="gt_row gt_right" headers="life_exp">75.4</td>
+<td class="gt_row gt_right" headers="wellbeing">5.4</td>
+<td class="gt_row gt_center" headers="footprint">1.65</td>
+<td class="gt_row gt_center" headers="footprint_bar"><div style="flex-grow:1;margin-left:8px;background:#EAEAEA;">
+<div style="background:#D55E00;width:11.5384615384615%;height:14px;">
+
+</div>
+</div></td>
+<td class="gt_row gt_right" headers="gdp_pc">$8,600</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left gt_striped" headers="country">Norway</td>
+<td class="gt_row gt_left gt_striped" headers="continent"><div style="display: inline-block; padding: 2px 12px; border-radius: 15px; font-weight: 600; font-size: 12px; background:#0072B233;">
+Europe
+</div></td>
+<td class="gt_row gt_center gt_striped" headers="hpi">52.2</td>
+<td class="gt_row gt_center gt_striped" headers="hpi_bar"><div style="flex-grow:1;margin-left:8px;background:#EAEAEA;">
+<div style="background:#0072B2;width:52.2%;height:14px;">
+
+</div>
+</div></td>
+<td class="gt_row gt_right gt_striped" headers="life_exp">83.2</td>
+<td class="gt_row gt_right gt_striped" headers="wellbeing">7.4</td>
+<td class="gt_row gt_center gt_striped" headers="footprint">4.50</td>
+<td class="gt_row gt_center gt_striped" headers="footprint_bar"><div style="flex-grow:1;margin-left:8px;background:#EAEAEA;">
+<div style="background:#D55E00;width:31.4685314685315%;height:14px;">
+
+</div>
+</div></td>
+<td class="gt_row gt_right gt_striped" headers="gdp_pc">$65,800</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country">Japan</td>
+<td class="gt_row gt_left" headers="continent"><div style="display: inline-block; padding: 2px 12px; border-radius: 15px; font-weight: 600; font-size: 12px; background:#009E7333;">
+Asia
+</div></td>
+<td class="gt_row gt_center" headers="hpi">51.8</td>
+<td class="gt_row gt_center" headers="hpi_bar"><div style="flex-grow:1;margin-left:8px;background:#EAEAEA;">
+<div style="background:#0072B2;width:51.8%;height:14px;">
+
+</div>
+</div></td>
+<td class="gt_row gt_right" headers="life_exp">84.6</td>
+<td class="gt_row gt_right" headers="wellbeing">6.1</td>
+<td class="gt_row gt_center" headers="footprint">4.35</td>
+<td class="gt_row gt_center" headers="footprint_bar"><div style="flex-grow:1;margin-left:8px;background:#EAEAEA;">
+<div style="background:#D55E00;width:30.4195804195804%;height:14px;">
+
+</div>
+</div></td>
+<td class="gt_row gt_right" headers="gdp_pc">$42,100</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left gt_striped" headers="country">United Kingdom</td>
+<td class="gt_row gt_left gt_striped" headers="continent"><div style="display: inline-block; padding: 2px 12px; border-radius: 15px; font-weight: 600; font-size: 12px; background:#0072B233;">
+Europe
+</div></td>
+<td class="gt_row gt_center gt_striped" headers="hpi">50.4</td>
+<td class="gt_row gt_center gt_striped" headers="hpi_bar"><div style="flex-grow:1;margin-left:8px;background:#EAEAEA;">
+<div style="background:#0072B2;width:50.4%;height:14px;">
+
+</div>
+</div></td>
+<td class="gt_row gt_right gt_striped" headers="life_exp">80.9</td>
+<td class="gt_row gt_right gt_striped" headers="wellbeing">6.9</td>
+<td class="gt_row gt_center gt_striped" headers="footprint">4.10</td>
+<td class="gt_row gt_center gt_striped" headers="footprint_bar"><div style="flex-grow:1;margin-left:8px;background:#EAEAEA;">
+<div style="background:#D55E00;width:28.6713286713287%;height:14px;">
+
+</div>
+</div></td>
+<td class="gt_row gt_right gt_striped" headers="gdp_pc">$45,300</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country">Germany</td>
+<td class="gt_row gt_left" headers="continent"><div style="display: inline-block; padding: 2px 12px; border-radius: 15px; font-weight: 600; font-size: 12px; background:#0072B233;">
+Europe
+</div></td>
+<td class="gt_row gt_center" headers="hpi">49.8</td>
+<td class="gt_row gt_center" headers="hpi_bar"><div style="flex-grow:1;margin-left:8px;background:#EAEAEA;">
+<div style="background:#0072B2;width:49.8%;height:14px;">
+
+</div>
+</div></td>
+<td class="gt_row gt_right" headers="life_exp">80.9</td>
+<td class="gt_row gt_right" headers="wellbeing">6.7</td>
+<td class="gt_row gt_center" headers="footprint">4.51</td>
+<td class="gt_row gt_center" headers="footprint_bar"><div style="flex-grow:1;margin-left:8px;background:#EAEAEA;">
+<div style="background:#D55E00;width:31.5384615384615%;height:14px;">
+
+</div>
+</div></td>
+<td class="gt_row gt_right" headers="gdp_pc">$53,900</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left gt_striped" headers="country">New Zealand</td>
+<td class="gt_row gt_left gt_striped" headers="continent"><div style="display: inline-block; padding: 2px 12px; border-radius: 15px; font-weight: 600; font-size: 12px; background:#CC79A733;">
+Oceania
+</div></td>
+<td class="gt_row gt_center gt_striped" headers="hpi">49.2</td>
+<td class="gt_row gt_center gt_striped" headers="hpi_bar"><div style="flex-grow:1;margin-left:8px;background:#EAEAEA;">
+<div style="background:#0072B2;width:49.2%;height:14px;">
+
+</div>
+</div></td>
+<td class="gt_row gt_right gt_striped" headers="life_exp">82.5</td>
+<td class="gt_row gt_right gt_striped" headers="wellbeing">7.1</td>
+<td class="gt_row gt_center gt_striped" headers="footprint">5.10</td>
+<td class="gt_row gt_center gt_striped" headers="footprint_bar"><div style="flex-grow:1;margin-left:8px;background:#EAEAEA;">
+<div style="background:#D55E00;width:35.6643356643357%;height:14px;">
+
+</div>
+</div></td>
+<td class="gt_row gt_right gt_striped" headers="gdp_pc">$42,300</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country">Brazil</td>
+<td class="gt_row gt_left" headers="continent"><div style="display: inline-block; padding: 2px 12px; border-radius: 15px; font-weight: 600; font-size: 12px; background:#56B4E933;">
+Americas
+</div></td>
+<td class="gt_row gt_center" headers="hpi">48.5</td>
+<td class="gt_row gt_center" headers="hpi_bar"><div style="flex-grow:1;margin-left:8px;background:#EAEAEA;">
+<div style="background:#0072B2;width:48.5%;height:14px;">
+
+</div>
+</div></td>
+<td class="gt_row gt_right" headers="life_exp">75.9</td>
+<td class="gt_row gt_right" headers="wellbeing">6.1</td>
+<td class="gt_row gt_center" headers="footprint">2.80</td>
+<td class="gt_row gt_center" headers="footprint_bar"><div style="flex-grow:1;margin-left:8px;background:#EAEAEA;">
+<div style="background:#D55E00;width:19.5804195804196%;height:14px;">
+
+</div>
+</div></td>
+<td class="gt_row gt_right" headers="gdp_pc">$14,800</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left gt_striped" headers="country">Algeria</td>
+<td class="gt_row gt_left gt_striped" headers="continent"><div style="display: inline-block; padding: 2px 12px; border-radius: 15px; font-weight: 600; font-size: 12px; background:#E69F0033;">
+Africa
+</div></td>
+<td class="gt_row gt_center gt_striped" headers="hpi">47.6</td>
+<td class="gt_row gt_center gt_striped" headers="hpi_bar"><div style="flex-grow:1;margin-left:8px;background:#EAEAEA;">
+<div style="background:#0072B2;width:47.6%;height:14px;">
+
+</div>
+</div></td>
+<td class="gt_row gt_right gt_striped" headers="life_exp">76.9</td>
+<td class="gt_row gt_right gt_striped" headers="wellbeing">5.2</td>
+<td class="gt_row gt_center gt_striped" headers="footprint">2.12</td>
+<td class="gt_row gt_center gt_striped" headers="footprint_bar"><div style="flex-grow:1;margin-left:8px;background:#EAEAEA;">
+<div style="background:#D55E00;width:14.8251748251748%;height:14px;">
+
+</div>
+</div></td>
+<td class="gt_row gt_right gt_striped" headers="gdp_pc">$11,500</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country">Morocco</td>
+<td class="gt_row gt_left" headers="continent"><div style="display: inline-block; padding: 2px 12px; border-radius: 15px; font-weight: 600; font-size: 12px; background:#E69F0033;">
+Africa
+</div></td>
+<td class="gt_row gt_center" headers="hpi">46.5</td>
+<td class="gt_row gt_center" headers="hpi_bar"><div style="flex-grow:1;margin-left:8px;background:#EAEAEA;">
+<div style="background:#0072B2;width:46.5%;height:14px;">
+
+</div>
+</div></td>
+<td class="gt_row gt_right" headers="life_exp">76.7</td>
+<td class="gt_row gt_right" headers="wellbeing">5.1</td>
+<td class="gt_row gt_center" headers="footprint">1.81</td>
+<td class="gt_row gt_center" headers="footprint_bar"><div style="flex-grow:1;margin-left:8px;background:#EAEAEA;">
+<div style="background:#D55E00;width:12.6573426573427%;height:14px;">
+
+</div>
+</div></td>
+<td class="gt_row gt_right" headers="gdp_pc">$7,800</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left gt_striped" headers="country">Australia</td>
+<td class="gt_row gt_left gt_striped" headers="continent"><div style="display: inline-block; padding: 2px 12px; border-radius: 15px; font-weight: 600; font-size: 12px; background:#CC79A733;">
+Oceania
+</div></td>
+<td class="gt_row gt_center gt_striped" headers="hpi">45.3</td>
+<td class="gt_row gt_center gt_striped" headers="hpi_bar"><div style="flex-grow:1;margin-left:8px;background:#EAEAEA;">
+<div style="background:#0072B2;width:45.3%;height:14px;">
+
+</div>
+</div></td>
+<td class="gt_row gt_right gt_striped" headers="life_exp">83.3</td>
+<td class="gt_row gt_right gt_striped" headers="wellbeing">7.2</td>
+<td class="gt_row gt_center gt_striped" headers="footprint">6.70</td>
+<td class="gt_row gt_center gt_striped" headers="footprint_bar"><div style="flex-grow:1;margin-left:8px;background:#EAEAEA;">
+<div style="background:#D55E00;width:46.8531468531469%;height:14px;">
+
+</div>
+</div></td>
+<td class="gt_row gt_right gt_striped" headers="gdp_pc">$51,800</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country">Poland</td>
+<td class="gt_row gt_left" headers="continent"><div style="display: inline-block; padding: 2px 12px; border-radius: 15px; font-weight: 600; font-size: 12px; background:#0072B233;">
+Europe
+</div></td>
+<td class="gt_row gt_center" headers="hpi">44.8</td>
+<td class="gt_row gt_center" headers="hpi_bar"><div style="flex-grow:1;margin-left:8px;background:#EAEAEA;">
+<div style="background:#0072B2;width:44.8%;height:14px;">
+
+</div>
+</div></td>
+<td class="gt_row gt_right" headers="life_exp">77.5</td>
+<td class="gt_row gt_right" headers="wellbeing">6.2</td>
+<td class="gt_row gt_center" headers="footprint">4.44</td>
+<td class="gt_row gt_center" headers="footprint_bar"><div style="flex-grow:1;margin-left:8px;background:#EAEAEA;">
+<div style="background:#D55E00;width:31.0489510489511%;height:14px;">
+
+</div>
+</div></td>
+<td class="gt_row gt_right" headers="gdp_pc">$34,300</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left gt_striped" headers="country">Canada</td>
+<td class="gt_row gt_left gt_striped" headers="continent"><div style="display: inline-block; padding: 2px 12px; border-radius: 15px; font-weight: 600; font-size: 12px; background:#56B4E933;">
+Americas
+</div></td>
+<td class="gt_row gt_center gt_striped" headers="hpi">44.1</td>
+<td class="gt_row gt_center gt_striped" headers="hpi_bar"><div style="flex-grow:1;margin-left:8px;background:#EAEAEA;">
+<div style="background:#0072B2;width:44.1%;height:14px;">
+
+</div>
+</div></td>
+<td class="gt_row gt_right gt_striped" headers="life_exp">82.7</td>
+<td class="gt_row gt_right gt_striped" headers="wellbeing">7.0</td>
+<td class="gt_row gt_center gt_striped" headers="footprint">7.77</td>
+<td class="gt_row gt_center gt_striped" headers="footprint_bar"><div style="flex-grow:1;margin-left:8px;background:#EAEAEA;">
+<div style="background:#D55E00;width:54.3356643356643%;height:14px;">
+
+</div>
+</div></td>
+<td class="gt_row gt_right gt_striped" headers="gdp_pc">$48,000</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country">China</td>
+<td class="gt_row gt_left" headers="continent"><div style="display: inline-block; padding: 2px 12px; border-radius: 15px; font-weight: 600; font-size: 12px; background:#009E7333;">
+Asia
+</div></td>
+<td class="gt_row gt_center" headers="hpi">43.8</td>
+<td class="gt_row gt_center" headers="hpi_bar"><div style="flex-grow:1;margin-left:8px;background:#EAEAEA;">
+<div style="background:#0072B2;width:43.8%;height:14px;">
+
+</div>
+</div></td>
+<td class="gt_row gt_right" headers="life_exp">78.1</td>
+<td class="gt_row gt_right" headers="wellbeing">5.8</td>
+<td class="gt_row gt_center" headers="footprint">3.71</td>
+<td class="gt_row gt_center" headers="footprint_bar"><div style="flex-grow:1;margin-left:8px;background:#EAEAEA;">
+<div style="background:#D55E00;width:25.9440559440559%;height:14px;">
+
+</div>
+</div></td>
+<td class="gt_row gt_right" headers="gdp_pc">$17,500</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left gt_striped" headers="country">India</td>
+<td class="gt_row gt_left gt_striped" headers="continent"><div style="display: inline-block; padding: 2px 12px; border-radius: 15px; font-weight: 600; font-size: 12px; background:#009E7333;">
+Asia
+</div></td>
+<td class="gt_row gt_center gt_striped" headers="hpi">43.6</td>
+<td class="gt_row gt_center gt_striped" headers="hpi_bar"><div style="flex-grow:1;margin-left:8px;background:#EAEAEA;">
+<div style="background:#0072B2;width:43.6%;height:14px;">
+
+</div>
+</div></td>
+<td class="gt_row gt_right gt_striped" headers="life_exp">67.2</td>
+<td class="gt_row gt_right gt_striped" headers="wellbeing">4.2</td>
+<td class="gt_row gt_center gt_striped" headers="footprint">1.21</td>
+<td class="gt_row gt_center gt_striped" headers="footprint_bar"><div style="flex-grow:1;margin-left:8px;background:#EAEAEA;">
+<div style="background:#D55E00;width:8.46153846153846%;height:14px;">
+
+</div>
+</div></td>
+<td class="gt_row gt_right gt_striped" headers="gdp_pc">$6,600</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country">Ghana</td>
+<td class="gt_row gt_left" headers="continent"><div style="display: inline-block; padding: 2px 12px; border-radius: 15px; font-weight: 600; font-size: 12px; background:#E69F0033;">
+Africa
+</div></td>
+<td class="gt_row gt_center" headers="hpi">40.7</td>
+<td class="gt_row gt_center" headers="hpi_bar"><div style="flex-grow:1;margin-left:8px;background:#EAEAEA;">
+<div style="background:#0072B2;width:40.7%;height:14px;">
+
+</div>
+</div></td>
+<td class="gt_row gt_right" headers="life_exp">64.1</td>
+<td class="gt_row gt_right" headers="wellbeing">5.1</td>
+<td class="gt_row gt_center" headers="footprint">1.80</td>
+<td class="gt_row gt_center" headers="footprint_bar"><div style="flex-grow:1;margin-left:8px;background:#EAEAEA;">
+<div style="background:#D55E00;width:12.5874125874126%;height:14px;">
+
+</div>
+</div></td>
+<td class="gt_row gt_right" headers="gdp_pc">$5,400</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left gt_striped" headers="country">United States</td>
+<td class="gt_row gt_left gt_striped" headers="continent"><div style="display: inline-block; padding: 2px 12px; border-radius: 15px; font-weight: 600; font-size: 12px; background:#56B4E933;">
+Americas
+</div></td>
+<td class="gt_row gt_center gt_striped" headers="hpi">37.4</td>
+<td class="gt_row gt_center gt_striped" headers="hpi_bar"><div style="flex-grow:1;margin-left:8px;background:#EAEAEA;">
+<div style="background:#0072B2;width:37.4%;height:14px;">
+
+</div>
+</div></td>
+<td class="gt_row gt_right gt_striped" headers="life_exp">76.4</td>
+<td class="gt_row gt_right gt_striped" headers="wellbeing">7.0</td>
+<td class="gt_row gt_center gt_striped" headers="footprint">7.80</td>
+<td class="gt_row gt_center gt_striped" headers="footprint_bar"><div style="flex-grow:1;margin-left:8px;background:#EAEAEA;">
+<div style="background:#D55E00;width:54.5454545454545%;height:14px;">
+
+</div>
+</div></td>
+<td class="gt_row gt_right gt_striped" headers="gdp_pc">$63,500</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country">Luxembourg</td>
+<td class="gt_row gt_left" headers="continent"><div style="display: inline-block; padding: 2px 12px; border-radius: 15px; font-weight: 600; font-size: 12px; background:#0072B233;">
+Europe
+</div></td>
+<td class="gt_row gt_center" headers="hpi">33.5</td>
+<td class="gt_row gt_center" headers="hpi_bar"><div style="flex-grow:1;margin-left:8px;background:#EAEAEA;">
+<div style="background:#0072B2;width:33.5%;height:14px;">
+
+</div>
+</div></td>
+<td class="gt_row gt_right" headers="life_exp">82.6</td>
+<td class="gt_row gt_right" headers="wellbeing">7.4</td>
+<td class="gt_row gt_center" headers="footprint">12.80</td>
+<td class="gt_row gt_center" headers="footprint_bar"><div style="flex-grow:1;margin-left:8px;background:#EAEAEA;">
+<div style="background:#D55E00;width:89.5104895104895%;height:14px;">
+
+</div>
+</div></td>
+<td class="gt_row gt_right" headers="gdp_pc">$116,300</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left gt_striped" headers="country">Qatar</td>
+<td class="gt_row gt_left gt_striped" headers="continent"><div style="display: inline-block; padding: 2px 12px; border-radius: 15px; font-weight: 600; font-size: 12px; background:#009E7333;">
+Asia
+</div></td>
+<td class="gt_row gt_center gt_striped" headers="hpi">22.6</td>
+<td class="gt_row gt_center gt_striped" headers="hpi_bar"><div style="flex-grow:1;margin-left:8px;background:#EAEAEA;">
+<div style="background:#0072B2;width:22.6%;height:14px;">
+
+</div>
+</div></td>
+<td class="gt_row gt_right gt_striped" headers="life_exp">79.3</td>
+<td class="gt_row gt_right gt_striped" headers="wellbeing">6.4</td>
+<td class="gt_row gt_center gt_striped" headers="footprint">14.30</td>
+<td class="gt_row gt_center gt_striped" headers="footprint_bar"><div style="flex-grow:1;margin-left:8px;background:#EAEAEA;">
+<div style="background:#D55E00;width:100%;height:14px;">
+
+</div>
+</div></td>
+<td class="gt_row gt_right gt_striped" headers="gdp_pc">$93,500</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="country">Central African Rep.</td>
+<td class="gt_row gt_left" headers="continent"><div style="display: inline-block; padding: 2px 12px; border-radius: 15px; font-weight: 600; font-size: 12px; background:#E69F0033;">
+Africa
+</div></td>
+<td class="gt_row gt_center" headers="hpi">21.1</td>
+<td class="gt_row gt_center" headers="hpi_bar"><div style="flex-grow:1;margin-left:8px;background:#EAEAEA;">
+<div style="background:#0072B2;width:21.1%;height:14px;">
+
+</div>
+</div></td>
+<td class="gt_row gt_right" headers="life_exp">53.9</td>
+<td class="gt_row gt_right" headers="wellbeing">3.5</td>
+<td class="gt_row gt_center" headers="footprint">1.45</td>
+<td class="gt_row gt_center" headers="footprint_bar"><div style="flex-grow:1;margin-left:8px;background:#EAEAEA;">
+<div style="background:#D55E00;width:10.1398601398601%;height:14px;">
+
+</div>
+</div></td>
+<td class="gt_row gt_right" headers="gdp_pc">$980</td>
+</tr>
+</tbody><tfoot>
+<tr class="gt_sourcenotes odd">
+<td colspan="9" class="gt_sourcenote">Source: Happy Planet Index 2024; World Bank Development Indicators. Table compiled for EPPS 6356 Chart Hackathon.</td>
+</tr>
+</tfoot>
+
+</table>
+
+</div>
+</div>
+</div>
+</section>
+<section id="analytical-takeaway-1" class="level3">
+<h3 class="anchored" data-anchor-id="analytical-takeaway-1">Analytical Takeaway</h3>
+<ul>
+<li><strong>The Decoupling Paradox:</strong> Economies with high GDP per capita (e.g., Luxembourg at $116,300 and the United States at $63,500) exhibit disproportionate ecological footprints (12.80 and 7.80 gha/capita), pulling their overall HPI scores below 45[cite: 4, 10]. Middle-income economies like Costa Rica (HPI 62.1) deliver comparable life expectancy with less than one-third of the ecological throughput[cite: 4, 10].</li>
+</ul>
+<hr>
+</section>
+</section>
+<section id="chart-3-horizontal-bar-chart-of-ranked-cohorts" class="level2">
+<h2 class="anchored" data-anchor-id="chart-3-horizontal-bar-chart-of-ranked-cohorts">Chart 3: Horizontal Bar Chart of Ranked Cohorts</h2>
+<section id="implementation-comparison-one-variable-many-items" class="level3">
+<h3 class="anchored" data-anchor-id="implementation-comparison-one-variable-many-items">Implementation (Comparison: One Variable, Many Items)</h3>
+<p>Chart 3 benchmarks the Top 20 and Bottom 20 nations. Factor levels are ordered by continuous HPI score using <code>forcats::fct_reorder()</code>, eliminating alphabetical friction[cite: 4, 11]. The visual encoding uses an accessible, non-green Okabe-Ito color scheme (Okabe-Ito Blue <code>#0072B2</code> vs.&nbsp;Vermilion <code>#D55E00</code>)[cite: 11].</p>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Render Chart 3: geom_col() + fct_reorder() Horizontal Ranked Bars</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>df_chart3 <span class="ot">&lt;-</span> df_chart3_raw <span class="sc">%&gt;%</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">country_ordered =</span> <span class="fu">fct_reorder</span>(country, hpi),</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">group =</span> <span class="fu">factor</span>(group, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Top 20"</span>, <span class="st">"Bottom 20"</span>))</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>p3 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df_chart3, <span class="fu">aes</span>(<span class="at">x =</span> hpi, <span class="at">y =</span> country_ordered, <span class="at">fill =</span> group)) <span class="sc">+</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">width =</span> <span class="fl">0.72</span>,</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">show.legend =</span> <span class="cn">FALSE</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">label =</span> <span class="fu">sprintf</span>(<span class="st">"%.1f"</span>, hpi)),</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">hjust =</span> <span class="sc">-</span><span class="fl">0.20</span>,</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="fl">3.1</span>,</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">fontface =</span> <span class="st">"bold"</span>,</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"#222222"</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>    <span class="sc">~</span> group,</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">scales =</span> <span class="st">"free_y"</span>,</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">ncol =</span> <span class="dv">2</span></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(</span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> <span class="fu">c</span>(</span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Top 20"</span>    <span class="ot">=</span> <span class="st">"#0072B2"</span>,  <span class="co"># Okabe-Ito Blue</span></span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Bottom 20"</span> <span class="ot">=</span> <span class="st">"#D55E00"</span>   <span class="co"># Okabe-Ito Vermilion</span></span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(</span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> <span class="st">"Happy Planet Index Score (0–100 Scale)"</span>,</span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>    <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">74</span>),</span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>    <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">70</span>, <span class="at">by =</span> <span class="dv">10</span>),</span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a>    <span class="at">expand =</span> <span class="fu">expansion</span>(<span class="at">mult =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.02</span>))</span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_discrete</span>(<span class="at">name =</span> <span class="st">"Country"</span>) <span class="sc">+</span></span>
+<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Latin American Nations Lead Sustainable Efficiency While Fossil Rentiers and Fragile States Lag"</span>,</span>
+<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Comparing the 20 highest- and 20 lowest-ranked global economies on the 2024 Happy Planet Index."</span>,</span>
+<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"Source: Happy Planet Index (2024 Edition) | EPPS 6356 Hackathon"</span></span>
+<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_hackathon</span>(<span class="at">legend_pos =</span> <span class="st">"none"</span>) <span class="sc">+</span></span>
+<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="fu">rel</span>(<span class="fl">0.78</span>), <span class="at">color =</span> <span class="st">"#222222"</span>),</span>
+<span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.spacing =</span> <span class="fu">unit</span>(<span class="fl">1.5</span>, <span class="st">"lines"</span>),</span>
+<span id="cb4-46"><a href="#cb4-46" aria-hidden="true" tabindex="-1"></a>    <span class="at">strip.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="fu">rel</span>(<span class="fl">0.95</span>), <span class="at">face =</span> <span class="st">"bold"</span>)</span>
+<span id="cb4-47"><a href="#cb4-47" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb4-48"><a href="#cb4-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-49"><a href="#cb4-49" aria-hidden="true" tabindex="-1"></a>p3</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="assign04_files/figure-html/chart-3-bar-chart-1.png" class="img-fluid figure-img" width="1104"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="analytical-takeaway-2" class="level3">
+<h3 class="anchored" data-anchor-id="analytical-takeaway-2">Analytical Takeaway</h3>
+<ul>
+<li><strong>Structural Distribution Divergence:</strong> The Top 20 cohort is dominated by Latin American nations and high-efficiency island nations (e.g., Vanuatu)[cite: 4, 11]. The Bottom 20 features carbon-intensive fossil fuel exporters (e.g., Qatar, UAE, Mongolia) alongside developing economies with severe health infrastructure constraints (e.g., Central African Republic), highlighting two distinct drivers of low sustainable efficiency[cite: 4, 11].</li>
+</ul>
+<hr>
+</section>
+</section>
+<section id="computational-environment-and-session-info" class="level2">
+<h2 class="anchored" data-anchor-id="computational-environment-and-session-info">Computational Environment and Session Info</h2>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Display sessionInfo() for Reproducibility</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>R version 4.6.1 (2026-06-24 ucrt)
+Platform: x86_64-w64-mingw32/x64
+Running under: Windows 11 x64 (build 26200)
+
+Matrix products: default
+  LAPACK version 3.12.1
+
+locale:
+[1] LC_COLLATE=English_United States.utf8 
+[2] LC_CTYPE=English_United States.utf8   
+[3] LC_MONETARY=English_United States.utf8
+[4] LC_NUMERIC=C                          
+[5] LC_TIME=English_United States.utf8    
+
+time zone: America/Chicago
+tzcode source: internal
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+[1] gtExtras_0.6.2 gt_1.3.0       scales_1.4.0   forcats_1.0.1  tidyr_1.3.2   
+[6] dplyr_1.2.1    ggplot2_4.0.3 
+
+loaded via a namespace (and not attached):
+ [1] gtable_0.3.6       jsonlite_2.0.0     rematch2_2.1.2     compiler_4.6.1    
+ [5] tidyselect_1.2.1   xml2_1.6.0         yaml_2.3.12        fastmap_1.2.0     
+ [9] paletteer_1.7.0    R6_2.6.1           commonmark_2.0.0   generics_0.1.4    
+[13] knitr_1.52         htmlwidgets_1.6.4  tibble_3.3.1       pillar_1.11.1     
+[17] RColorBrewer_1.1-3 rlang_1.3.0        litedown_0.11      xfun_0.61         
+[21] sass_0.4.10        fs_2.1.0           S7_0.2.2           otel_0.2.0        
+[25] cli_3.6.6          withr_3.0.3        magrittr_2.0.5     digest_0.6.39     
+[29] grid_4.6.1         fontawesome_0.5.3  rstudioapi_0.19.0  markdown_2.0      
+[33] base64enc_0.1-6    lifecycle_1.0.5    vctrs_0.7.3        evaluate_1.0.5    
+[37] glue_1.8.1         farver_2.1.2       rmarkdown_2.32     purrr_1.2.2       
+[41] tools_4.6.1        pkgconfig_2.0.3    htmltools_0.5.9   </code></pre>
+</div>
+</div>
 
 
+<!-- -->
+
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -230,6 +1828,57 @@ ul.task-list li input[type="checkbox"] {
         container: window.document.getElementById('quarto-embedded-source-code-modal')
       });
       clipboardModal.on('success', onCopySuccess);
+    }
+    const viewSource = window.document.getElementById('quarto-view-source') ||
+                       window.document.getElementById('quarto-code-tools-source');
+    if (viewSource) {
+      const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+      viewSource.addEventListener("click", function(e) {
+        if (sourceUrl) {
+          // rstudio viewer pane
+          if (/\bcapabilities=\b/.test(window.location)) {
+            window.open(sourceUrl);
+          } else {
+            window.location.href = sourceUrl;
+          }
+        } else {
+          const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+          modal.show();
+        }
+        return false;
+      });
+    }
+    function toggleCodeHandler(show) {
+      return function(e) {
+        const cellDetails = window.document.querySelectorAll(".cell details.code-fold");
+        for (let i=0; i<cellDetails.length; i++) {
+          const details = cellDetails[i];
+          if (show) {
+            details.open = true;
+          } else {
+            details.removeAttribute("open");
+          }
+        }
+        const cellCodeDivs = window.document.querySelectorAll(".cell div.sourceCode.cell-code");
+        const fromCls = show ? "hidden" : "unhidden";
+        const toCls = show ? "unhidden" : "hidden";
+        for (let i=0; i<cellCodeDivs.length; i++) {
+          const codeDiv = cellCodeDivs[i];
+          if (codeDiv.classList.contains(fromCls)) {
+            codeDiv.classList.remove(fromCls);
+            codeDiv.classList.add(toCls);
+          } 
+        }
+        return false;
+      }
+    }
+    const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+    if (hideAllCode) {
+      hideAllCode.addEventListener("click", toggleCodeHandler(false));
+    }
+    const showAllCode = window.document.getElementById("quarto-show-all-code");
+    if (showAllCode) {
+      showAllCode.addEventListener("click", toggleCodeHandler(true));
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
@@ -559,7 +2208,468 @@ ul.task-list li input[type="checkbox"] {
       }
     }
   });
-  </script>
+  </script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "48-Hour Chart Hackathon: Visualizing the Happy Planet Index"</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="an">subtitle:</span><span class="co"> "EPPS 6356 Data Visualization | Assignment 4"</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="an">author:</span><span class="co"> "Team Hackathon (Nedret Sen-Cavus, Anugraha Samuel Gloria,Shao-Kang)"</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="an">date:</span><span class="co"> "October 2, 2026"</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co">  html:</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co">    theme: cosmo</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="co">    toc: true</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="co">    toc-depth: 3</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="co">    code-fold: show</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="co">    code-tools: true</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="co">    df-print: paged</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="co">    fig-width: 10.5</span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a><span class="co">    fig-height: 6.5</span></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>  ## Executive Overview</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>  This report completes Assignment 4 (48-Hour Chart Hackathon) for EPPS 6356 Data Visualization. We implement the core chart paradigms from Andrew Abela's *Chart Thought-Starter* (Comparison: Among Items branch) using the Happy Planet Index (HPI) dataset. All figures share a unified styling system defined in <span class="in">`R/theme.R`</span>, adhere to Edward Tufte's data-ink maximization<span class="co">[</span><span class="ot">cite: 4, 16</span><span class="co">]</span>, utilize color-blind safe palettes (Okabe &amp; Ito 2008)<span class="co">[</span><span class="ot">cite: 11</span><span class="co">]</span>, and encode comparisons along common spatial baselines (Cleveland &amp; McGill 1984).</span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: setup</span></span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a><span class="co">#| code-summary: "Load Dependencies, Theme, and Processed Datasets"</span></span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>pal_okabe_ito <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>  <span class="st">"orange"</span>        <span class="ot">=</span> <span class="st">"#E69F00"</span>,</span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>  <span class="st">"sky_blue"</span>      <span class="ot">=</span> <span class="st">"#56B4E9"</span>,</span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>  <span class="st">"bluish_green"</span>  <span class="ot">=</span> <span class="st">"#009E73"</span>,</span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>  <span class="st">"yellow"</span>        <span class="ot">=</span> <span class="st">"#F0E442"</span>,</span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>  <span class="st">"blue"</span>          <span class="ot">=</span> <span class="st">"#0072B2"</span>,</span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a>  <span class="st">"vermilion"</span>     <span class="ot">=</span> <span class="st">"#D55E00"</span>,</span>
+<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a>  <span class="st">"reddish_purple"</span><span class="ot">=</span> <span class="st">"#CC79A7"</span>,</span>
+<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a>  <span class="st">"dark_gray"</span>     <span class="ot">=</span> <span class="st">"#333333"</span></span>
+<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a>pal_continent <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb7-40"><a href="#cb7-40" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Africa"</span>   <span class="ot">=</span> <span class="st">"#E69F00"</span>, <span class="co"># Orange</span></span>
+<span id="cb7-41"><a href="#cb7-41" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Americas"</span> <span class="ot">=</span> <span class="st">"#56B4E9"</span>, <span class="co"># Sky Blue</span></span>
+<span id="cb7-42"><a href="#cb7-42" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Asia"</span>     <span class="ot">=</span> <span class="st">"#009E73"</span>, <span class="co"># Bluish Green</span></span>
+<span id="cb7-43"><a href="#cb7-43" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Europe"</span>   <span class="ot">=</span> <span class="st">"#0072B2"</span>, <span class="co"># Blue</span></span>
+<span id="cb7-44"><a href="#cb7-44" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Oceania"</span>  <span class="ot">=</span> <span class="st">"#CC79A7"</span>  <span class="co"># Reddish Purple</span></span>
+<span id="cb7-45"><a href="#cb7-45" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-46"><a href="#cb7-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-47"><a href="#cb7-47" aria-hidden="true" tabindex="-1"></a>pal_rank_comparison <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb7-48"><a href="#cb7-48" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Top 20"</span>    <span class="ot">=</span> <span class="st">"#009E73"</span>, <span class="co"># Greenish (high wellbeing / sustainable efficiency)</span></span>
+<span id="cb7-49"><a href="#cb7-49" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Bottom 20"</span> <span class="ot">=</span> <span class="st">"#D55E00"</span>  <span class="co"># Vermilion (low wellbeing / high footprint)</span></span>
+<span id="cb7-50"><a href="#cb7-50" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-51"><a href="#cb7-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-52"><a href="#cb7-52" aria-hidden="true" tabindex="-1"></a>scale_fill_continent <span class="ot">&lt;-</span> <span class="cf">function</span>(...) {</span>
+<span id="cb7-53"><a href="#cb7-53" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> pal_continent, ...)</span>
+<span id="cb7-54"><a href="#cb7-54" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb7-55"><a href="#cb7-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-56"><a href="#cb7-56" aria-hidden="true" tabindex="-1"></a>scale_color_continent <span class="ot">&lt;-</span> <span class="cf">function</span>(...) {</span>
+<span id="cb7-57"><a href="#cb7-57" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> pal_continent, ...)</span>
+<span id="cb7-58"><a href="#cb7-58" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb7-59"><a href="#cb7-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-60"><a href="#cb7-60" aria-hidden="true" tabindex="-1"></a>scale_fill_hackathon <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">values =</span> pal_okabe_ito, ...) {</span>
+<span id="cb7-61"><a href="#cb7-61" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> values, ...)</span>
+<span id="cb7-62"><a href="#cb7-62" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb7-63"><a href="#cb7-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-64"><a href="#cb7-64" aria-hidden="true" tabindex="-1"></a>scale_color_hackathon <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">values =</span> pal_okabe_ito, ...) {</span>
+<span id="cb7-65"><a href="#cb7-65" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> values, ...)</span>
+<span id="cb7-66"><a href="#cb7-66" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb7-67"><a href="#cb7-67" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-68"><a href="#cb7-68" aria-hidden="true" tabindex="-1"></a><span class="fu">suppressPackageStartupMessages</span>({</span>
+<span id="cb7-69"><a href="#cb7-69" aria-hidden="true" tabindex="-1"></a>  <span class="fu">library</span>(ggplot2)</span>
+<span id="cb7-70"><a href="#cb7-70" aria-hidden="true" tabindex="-1"></a>  <span class="fu">library</span>(dplyr)</span>
+<span id="cb7-71"><a href="#cb7-71" aria-hidden="true" tabindex="-1"></a>  <span class="fu">library</span>(tidyr)</span>
+<span id="cb7-72"><a href="#cb7-72" aria-hidden="true" tabindex="-1"></a>  <span class="fu">library</span>(forcats)</span>
+<span id="cb7-73"><a href="#cb7-73" aria-hidden="true" tabindex="-1"></a>  <span class="fu">library</span>(scales)</span>
+<span id="cb7-74"><a href="#cb7-74" aria-hidden="true" tabindex="-1"></a>  <span class="fu">library</span>(gt)</span>
+<span id="cb7-75"><a href="#cb7-75" aria-hidden="true" tabindex="-1"></a>  <span class="fu">library</span>(gtExtras)</span>
+<span id="cb7-76"><a href="#cb7-76" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb7-77"><a href="#cb7-77" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-78"><a href="#cb7-78" aria-hidden="true" tabindex="-1"></a>hpi_clean     <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"../data/hpi_clean.rds"</span>)</span>
+<span id="cb7-79"><a href="#cb7-79" aria-hidden="true" tabindex="-1"></a>df_chart1     <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"../data/hpi_chart1.rds"</span>)</span>
+<span id="cb7-80"><a href="#cb7-80" aria-hidden="true" tabindex="-1"></a>df_chart2_raw <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"../data/hpi_chart2.rds"</span>)</span>
+<span id="cb7-81"><a href="#cb7-81" aria-hidden="true" tabindex="-1"></a>df_chart3_raw <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"../data/hpi_chart3.rds"</span>)</span>
+<span id="cb7-82"><a href="#cb7-82" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb7-83"><a href="#cb7-83" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-84"><a href="#cb7-84" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb7-85"><a href="#cb7-85" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb7-86"><a href="#cb7-86" aria-hidden="true" tabindex="-1"></a>  ## Chart 1: Variable-Width Column Chart</span>
+<span id="cb7-87"><a href="#cb7-87" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb7-88"><a href="#cb7-88" aria-hidden="true" tabindex="-1"></a>  ### Implementation (Comparison: Two Variables per Item)</span>
+<span id="cb7-89"><a href="#cb7-89" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb7-90"><a href="#cb7-90" aria-hidden="true" tabindex="-1"></a>  Chart 1 maps two continuous macro-demographic dimensions simultaneously using <span class="in">`geom_rect()`</span>: continental population determines rectangle width ($W_i = xmax_i - xmin_i$), while population-weighted Happy Planet Index determines column height ($ymax_i$)<span class="co">[</span><span class="ot">cite: 4, 5</span><span class="co">]</span>. Interior polygon text has been eliminated to maximize the data-ink ratio and prevent label clipping across narrower columns (e.g., Oceania)<span class="co">[</span><span class="ot">cite: 4, 5</span><span class="co">]</span>.</span>
+<span id="cb7-91"><a href="#cb7-91" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-94"><a href="#cb7-94" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb7-95"><a href="#cb7-95" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: chart-1-variable-width</span></span>
+<span id="cb7-96"><a href="#cb7-96" aria-hidden="true" tabindex="-1"></a><span class="co">#| code-summary: "Render Chart 1: geom_rect() Variable-Width Columns"</span></span>
+<span id="cb7-97"><a href="#cb7-97" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-width: 10.5</span></span>
+<span id="cb7-98"><a href="#cb7-98" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-height: 6.2</span></span>
+<span id="cb7-99"><a href="#cb7-99" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-100"><a href="#cb7-100" aria-hidden="true" tabindex="-1"></a>theme_hackathon <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">base_size =</span> <span class="dv">11</span>,</span>
+<span id="cb7-101"><a href="#cb7-101" aria-hidden="true" tabindex="-1"></a>                            <span class="at">base_family =</span> <span class="st">"sans"</span>,</span>
+<span id="cb7-102"><a href="#cb7-102" aria-hidden="true" tabindex="-1"></a>                            <span class="at">axis_slant =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb7-103"><a href="#cb7-103" aria-hidden="true" tabindex="-1"></a>                            <span class="at">legend_pos =</span> <span class="st">"top"</span>) {</span>
+<span id="cb7-104"><a href="#cb7-104" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb7-105"><a href="#cb7-105" aria-hidden="true" tabindex="-1"></a>  th <span class="ot">&lt;-</span> <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> base_size, <span class="at">base_family =</span> base_family) <span class="sc">%+replace%</span></span>
+<span id="cb7-106"><a href="#cb7-106" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(</span>
+<span id="cb7-107"><a href="#cb7-107" aria-hidden="true" tabindex="-1"></a>      <span class="at">plot.title =</span> <span class="fu">element_text</span>(</span>
+<span id="cb7-108"><a href="#cb7-108" aria-hidden="true" tabindex="-1"></a>        <span class="at">size =</span> <span class="fu">rel</span>(<span class="fl">1.30</span>),</span>
+<span id="cb7-109"><a href="#cb7-109" aria-hidden="true" tabindex="-1"></a>        <span class="at">face =</span> <span class="st">"bold"</span>,</span>
+<span id="cb7-110"><a href="#cb7-110" aria-hidden="true" tabindex="-1"></a>        <span class="at">color =</span> <span class="st">"#111111"</span>,</span>
+<span id="cb7-111"><a href="#cb7-111" aria-hidden="true" tabindex="-1"></a>        <span class="at">hjust =</span> <span class="dv">0</span>,</span>
+<span id="cb7-112"><a href="#cb7-112" aria-hidden="true" tabindex="-1"></a>        <span class="at">margin =</span> <span class="fu">margin</span>(<span class="at">b =</span> <span class="dv">6</span>)</span>
+<span id="cb7-113"><a href="#cb7-113" aria-hidden="true" tabindex="-1"></a>      ),</span>
+<span id="cb7-114"><a href="#cb7-114" aria-hidden="true" tabindex="-1"></a>      <span class="at">plot.subtitle =</span> <span class="fu">element_text</span>(</span>
+<span id="cb7-115"><a href="#cb7-115" aria-hidden="true" tabindex="-1"></a>        <span class="at">size =</span> <span class="fu">rel</span>(<span class="fl">0.95</span>),</span>
+<span id="cb7-116"><a href="#cb7-116" aria-hidden="true" tabindex="-1"></a>        <span class="at">color =</span> <span class="st">"#444444"</span>,</span>
+<span id="cb7-117"><a href="#cb7-117" aria-hidden="true" tabindex="-1"></a>        <span class="at">hjust =</span> <span class="dv">0</span>,</span>
+<span id="cb7-118"><a href="#cb7-118" aria-hidden="true" tabindex="-1"></a>        <span class="at">margin =</span> <span class="fu">margin</span>(<span class="at">b =</span> <span class="dv">12</span>)</span>
+<span id="cb7-119"><a href="#cb7-119" aria-hidden="true" tabindex="-1"></a>      ),</span>
+<span id="cb7-120"><a href="#cb7-120" aria-hidden="true" tabindex="-1"></a>      <span class="at">plot.caption =</span> <span class="fu">element_text</span>(</span>
+<span id="cb7-121"><a href="#cb7-121" aria-hidden="true" tabindex="-1"></a>        <span class="at">size =</span> <span class="fu">rel</span>(<span class="fl">0.75</span>),</span>
+<span id="cb7-122"><a href="#cb7-122" aria-hidden="true" tabindex="-1"></a>        <span class="at">color =</span> <span class="st">"#666666"</span>,</span>
+<span id="cb7-123"><a href="#cb7-123" aria-hidden="true" tabindex="-1"></a>        <span class="at">hjust =</span> <span class="dv">0</span>,</span>
+<span id="cb7-124"><a href="#cb7-124" aria-hidden="true" tabindex="-1"></a>        <span class="at">margin =</span> <span class="fu">margin</span>(<span class="at">t =</span> <span class="dv">12</span>)</span>
+<span id="cb7-125"><a href="#cb7-125" aria-hidden="true" tabindex="-1"></a>      ),</span>
+<span id="cb7-126"><a href="#cb7-126" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb7-127"><a href="#cb7-127" aria-hidden="true" tabindex="-1"></a>      <span class="at">axis.title.x =</span> <span class="fu">element_text</span>(</span>
+<span id="cb7-128"><a href="#cb7-128" aria-hidden="true" tabindex="-1"></a>        <span class="at">size =</span> <span class="fu">rel</span>(<span class="fl">0.90</span>),</span>
+<span id="cb7-129"><a href="#cb7-129" aria-hidden="true" tabindex="-1"></a>        <span class="at">face =</span> <span class="st">"bold"</span>,</span>
+<span id="cb7-130"><a href="#cb7-130" aria-hidden="true" tabindex="-1"></a>        <span class="at">color =</span> <span class="st">"#222222"</span>,</span>
+<span id="cb7-131"><a href="#cb7-131" aria-hidden="true" tabindex="-1"></a>        <span class="at">margin =</span> <span class="fu">margin</span>(<span class="at">t =</span> <span class="dv">8</span>)</span>
+<span id="cb7-132"><a href="#cb7-132" aria-hidden="true" tabindex="-1"></a>      ),</span>
+<span id="cb7-133"><a href="#cb7-133" aria-hidden="true" tabindex="-1"></a>      <span class="at">axis.title.y =</span> <span class="fu">element_text</span>(</span>
+<span id="cb7-134"><a href="#cb7-134" aria-hidden="true" tabindex="-1"></a>        <span class="at">size =</span> <span class="fu">rel</span>(<span class="fl">0.90</span>),</span>
+<span id="cb7-135"><a href="#cb7-135" aria-hidden="true" tabindex="-1"></a>        <span class="at">face =</span> <span class="st">"bold"</span>,</span>
+<span id="cb7-136"><a href="#cb7-136" aria-hidden="true" tabindex="-1"></a>        <span class="at">color =</span> <span class="st">"#222222"</span>,</span>
+<span id="cb7-137"><a href="#cb7-137" aria-hidden="true" tabindex="-1"></a>        <span class="at">margin =</span> <span class="fu">margin</span>(<span class="at">r =</span> <span class="dv">8</span>)</span>
+<span id="cb7-138"><a href="#cb7-138" aria-hidden="true" tabindex="-1"></a>      ),</span>
+<span id="cb7-139"><a href="#cb7-139" aria-hidden="true" tabindex="-1"></a>      <span class="at">axis.text =</span> <span class="fu">element_text</span>(</span>
+<span id="cb7-140"><a href="#cb7-140" aria-hidden="true" tabindex="-1"></a>        <span class="at">size =</span> <span class="fu">rel</span>(<span class="fl">0.82</span>),</span>
+<span id="cb7-141"><a href="#cb7-141" aria-hidden="true" tabindex="-1"></a>        <span class="at">color =</span> <span class="st">"#333333"</span></span>
+<span id="cb7-142"><a href="#cb7-142" aria-hidden="true" tabindex="-1"></a>      ),</span>
+<span id="cb7-143"><a href="#cb7-143" aria-hidden="true" tabindex="-1"></a>      <span class="at">axis.line =</span> <span class="fu">element_line</span>(</span>
+<span id="cb7-144"><a href="#cb7-144" aria-hidden="true" tabindex="-1"></a>        <span class="at">color =</span> <span class="st">"#777777"</span>,</span>
+<span id="cb7-145"><a href="#cb7-145" aria-hidden="true" tabindex="-1"></a>        <span class="at">linewidth =</span> <span class="fl">0.45</span></span>
+<span id="cb7-146"><a href="#cb7-146" aria-hidden="true" tabindex="-1"></a>      ),</span>
+<span id="cb7-147"><a href="#cb7-147" aria-hidden="true" tabindex="-1"></a>      <span class="at">axis.ticks =</span> <span class="fu">element_line</span>(</span>
+<span id="cb7-148"><a href="#cb7-148" aria-hidden="true" tabindex="-1"></a>        <span class="at">color =</span> <span class="st">"#777777"</span>,</span>
+<span id="cb7-149"><a href="#cb7-149" aria-hidden="true" tabindex="-1"></a>        <span class="at">linewidth =</span> <span class="fl">0.40</span></span>
+<span id="cb7-150"><a href="#cb7-150" aria-hidden="true" tabindex="-1"></a>      ),</span>
+<span id="cb7-151"><a href="#cb7-151" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb7-152"><a href="#cb7-152" aria-hidden="true" tabindex="-1"></a>      <span class="at">panel.grid.major =</span> <span class="fu">element_line</span>(</span>
+<span id="cb7-153"><a href="#cb7-153" aria-hidden="true" tabindex="-1"></a>        <span class="at">color =</span> <span class="st">"#ECECEC"</span>,</span>
+<span id="cb7-154"><a href="#cb7-154" aria-hidden="true" tabindex="-1"></a>        <span class="at">linewidth =</span> <span class="fl">0.35</span></span>
+<span id="cb7-155"><a href="#cb7-155" aria-hidden="true" tabindex="-1"></a>      ),</span>
+<span id="cb7-156"><a href="#cb7-156" aria-hidden="true" tabindex="-1"></a>      <span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb7-157"><a href="#cb7-157" aria-hidden="true" tabindex="-1"></a>      <span class="at">panel.background =</span> <span class="fu">element_rect</span>(</span>
+<span id="cb7-158"><a href="#cb7-158" aria-hidden="true" tabindex="-1"></a>        <span class="at">fill =</span> <span class="st">"#FFFFFF"</span>,</span>
+<span id="cb7-159"><a href="#cb7-159" aria-hidden="true" tabindex="-1"></a>        <span class="at">color =</span> <span class="cn">NA</span></span>
+<span id="cb7-160"><a href="#cb7-160" aria-hidden="true" tabindex="-1"></a>      ),</span>
+<span id="cb7-161"><a href="#cb7-161" aria-hidden="true" tabindex="-1"></a>      <span class="at">plot.background =</span> <span class="fu">element_rect</span>(</span>
+<span id="cb7-162"><a href="#cb7-162" aria-hidden="true" tabindex="-1"></a>        <span class="at">fill =</span> <span class="st">"#FFFFFF"</span>,</span>
+<span id="cb7-163"><a href="#cb7-163" aria-hidden="true" tabindex="-1"></a>        <span class="at">color =</span> <span class="cn">NA</span></span>
+<span id="cb7-164"><a href="#cb7-164" aria-hidden="true" tabindex="-1"></a>      ),</span>
+<span id="cb7-165"><a href="#cb7-165" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb7-166"><a href="#cb7-166" aria-hidden="true" tabindex="-1"></a>      <span class="at">legend.position =</span> legend_pos,</span>
+<span id="cb7-167"><a href="#cb7-167" aria-hidden="true" tabindex="-1"></a>      <span class="at">legend.title =</span> <span class="fu">element_text</span>(</span>
+<span id="cb7-168"><a href="#cb7-168" aria-hidden="true" tabindex="-1"></a>        <span class="at">size =</span> <span class="fu">rel</span>(<span class="fl">0.85</span>),</span>
+<span id="cb7-169"><a href="#cb7-169" aria-hidden="true" tabindex="-1"></a>        <span class="at">face =</span> <span class="st">"bold"</span>,</span>
+<span id="cb7-170"><a href="#cb7-170" aria-hidden="true" tabindex="-1"></a>        <span class="at">color =</span> <span class="st">"#222222"</span></span>
+<span id="cb7-171"><a href="#cb7-171" aria-hidden="true" tabindex="-1"></a>      ),</span>
+<span id="cb7-172"><a href="#cb7-172" aria-hidden="true" tabindex="-1"></a>      <span class="at">legend.text =</span> <span class="fu">element_text</span>(</span>
+<span id="cb7-173"><a href="#cb7-173" aria-hidden="true" tabindex="-1"></a>        <span class="at">size =</span> <span class="fu">rel</span>(<span class="fl">0.80</span>),</span>
+<span id="cb7-174"><a href="#cb7-174" aria-hidden="true" tabindex="-1"></a>        <span class="at">color =</span> <span class="st">"#333333"</span></span>
+<span id="cb7-175"><a href="#cb7-175" aria-hidden="true" tabindex="-1"></a>      ),</span>
+<span id="cb7-176"><a href="#cb7-176" aria-hidden="true" tabindex="-1"></a>      <span class="at">legend.key =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb7-177"><a href="#cb7-177" aria-hidden="true" tabindex="-1"></a>      <span class="at">legend.background =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb7-178"><a href="#cb7-178" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb7-179"><a href="#cb7-179" aria-hidden="true" tabindex="-1"></a>      <span class="at">strip.background =</span> <span class="fu">element_rect</span>(</span>
+<span id="cb7-180"><a href="#cb7-180" aria-hidden="true" tabindex="-1"></a>        <span class="at">fill =</span> <span class="st">"#F2F4F8"</span>,</span>
+<span id="cb7-181"><a href="#cb7-181" aria-hidden="true" tabindex="-1"></a>        <span class="at">color =</span> <span class="cn">NA</span></span>
+<span id="cb7-182"><a href="#cb7-182" aria-hidden="true" tabindex="-1"></a>      ),</span>
+<span id="cb7-183"><a href="#cb7-183" aria-hidden="true" tabindex="-1"></a>      <span class="at">strip.text =</span> <span class="fu">element_text</span>(</span>
+<span id="cb7-184"><a href="#cb7-184" aria-hidden="true" tabindex="-1"></a>        <span class="at">size =</span> <span class="fu">rel</span>(<span class="fl">0.88</span>),</span>
+<span id="cb7-185"><a href="#cb7-185" aria-hidden="true" tabindex="-1"></a>        <span class="at">face =</span> <span class="st">"bold"</span>,</span>
+<span id="cb7-186"><a href="#cb7-186" aria-hidden="true" tabindex="-1"></a>        <span class="at">color =</span> <span class="st">"#222222"</span>,</span>
+<span id="cb7-187"><a href="#cb7-187" aria-hidden="true" tabindex="-1"></a>        <span class="at">margin =</span> <span class="fu">margin</span>(<span class="at">t =</span> <span class="dv">4</span>, <span class="at">b =</span> <span class="dv">4</span>)</span>
+<span id="cb7-188"><a href="#cb7-188" aria-hidden="true" tabindex="-1"></a>      ),</span>
+<span id="cb7-189"><a href="#cb7-189" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb7-190"><a href="#cb7-190" aria-hidden="true" tabindex="-1"></a>      <span class="at">plot.margin =</span> <span class="fu">margin</span>(<span class="at">t =</span> <span class="dv">16</span>, <span class="at">r =</span> <span class="dv">18</span>, <span class="at">b =</span> <span class="dv">14</span>, <span class="at">l =</span> <span class="dv">16</span>),</span>
+<span id="cb7-191"><a href="#cb7-191" aria-hidden="true" tabindex="-1"></a>      <span class="at">plot.title.position =</span> <span class="st">"plot"</span>,</span>
+<span id="cb7-192"><a href="#cb7-192" aria-hidden="true" tabindex="-1"></a>      <span class="at">plot.caption.position =</span> <span class="st">"plot"</span></span>
+<span id="cb7-193"><a href="#cb7-193" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb7-194"><a href="#cb7-194" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb7-195"><a href="#cb7-195" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">isTRUE</span>(axis_slant)) {</span>
+<span id="cb7-196"><a href="#cb7-196" aria-hidden="true" tabindex="-1"></a>    th <span class="ot">&lt;-</span> th <span class="sc">+</span> <span class="fu">theme</span>(</span>
+<span id="cb7-197"><a href="#cb7-197" aria-hidden="true" tabindex="-1"></a>      <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>, <span class="at">vjust =</span> <span class="dv">1</span>)</span>
+<span id="cb7-198"><a href="#cb7-198" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb7-199"><a href="#cb7-199" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb7-200"><a href="#cb7-200" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb7-201"><a href="#cb7-201" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(th)</span>
+<span id="cb7-202"><a href="#cb7-202" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb7-203"><a href="#cb7-203" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-204"><a href="#cb7-204" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df_chart1) <span class="sc">+</span></span>
+<span id="cb7-205"><a href="#cb7-205" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_rect</span>(</span>
+<span id="cb7-206"><a href="#cb7-206" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(</span>
+<span id="cb7-207"><a href="#cb7-207" aria-hidden="true" tabindex="-1"></a>      <span class="at">xmin =</span> xmin,</span>
+<span id="cb7-208"><a href="#cb7-208" aria-hidden="true" tabindex="-1"></a>      <span class="at">xmax =</span> xmax,</span>
+<span id="cb7-209"><a href="#cb7-209" aria-hidden="true" tabindex="-1"></a>      <span class="at">ymin =</span> <span class="dv">0</span>,</span>
+<span id="cb7-210"><a href="#cb7-210" aria-hidden="true" tabindex="-1"></a>      <span class="at">ymax =</span> ymax,</span>
+<span id="cb7-211"><a href="#cb7-211" aria-hidden="true" tabindex="-1"></a>      <span class="at">fill =</span> continent</span>
+<span id="cb7-212"><a href="#cb7-212" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb7-213"><a href="#cb7-213" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"#FFFFFF"</span>,</span>
+<span id="cb7-214"><a href="#cb7-214" aria-hidden="true" tabindex="-1"></a>    <span class="at">linewidth =</span> <span class="fl">0.7</span></span>
+<span id="cb7-215"><a href="#cb7-215" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb7-216"><a href="#cb7-216" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(</span>
+<span id="cb7-217"><a href="#cb7-217" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(</span>
+<span id="cb7-218"><a href="#cb7-218" aria-hidden="true" tabindex="-1"></a>      <span class="at">x =</span> xcenter,</span>
+<span id="cb7-219"><a href="#cb7-219" aria-hidden="true" tabindex="-1"></a>      <span class="at">y =</span> ymax <span class="sc">+</span> <span class="fl">1.6</span>,</span>
+<span id="cb7-220"><a href="#cb7-220" aria-hidden="true" tabindex="-1"></a>      <span class="at">label =</span> <span class="fu">sprintf</span>(<span class="st">"%.1f"</span>, ymax)</span>
+<span id="cb7-221"><a href="#cb7-221" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb7-222"><a href="#cb7-222" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"#222222"</span>,</span>
+<span id="cb7-223"><a href="#cb7-223" aria-hidden="true" tabindex="-1"></a>    <span class="at">fontface =</span> <span class="st">"bold"</span>,</span>
+<span id="cb7-224"><a href="#cb7-224" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="fl">3.4</span></span>
+<span id="cb7-225"><a href="#cb7-225" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb7-226"><a href="#cb7-226" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_continent</span>(<span class="at">name =</span> <span class="st">"Continent"</span>) <span class="sc">+</span></span>
+<span id="cb7-227"><a href="#cb7-227" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(</span>
+<span id="cb7-228"><a href="#cb7-228" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> <span class="st">"Cumulative Global Population (Millions)"</span>,</span>
+<span id="cb7-229"><a href="#cb7-229" aria-hidden="true" tabindex="-1"></a>    <span class="at">expand =</span> <span class="fu">expansion</span>(<span class="at">mult =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.02</span>)),</span>
+<span id="cb7-230"><a href="#cb7-230" aria-hidden="true" tabindex="-1"></a>    <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">5000</span>, <span class="at">by =</span> <span class="dv">1000</span>),</span>
+<span id="cb7-231"><a href="#cb7-231" aria-hidden="true" tabindex="-1"></a>    <span class="at">labels =</span> <span class="fu">comma_format</span>(<span class="at">suffix =</span> <span class="st">"M"</span>)</span>
+<span id="cb7-232"><a href="#cb7-232" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb7-233"><a href="#cb7-233" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(</span>
+<span id="cb7-234"><a href="#cb7-234" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> <span class="st">"Population-Weighted Mean HPI (Score: 0–100)"</span>,</span>
+<span id="cb7-235"><a href="#cb7-235" aria-hidden="true" tabindex="-1"></a>    <span class="at">expand =</span> <span class="fu">expansion</span>(<span class="at">mult =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.05</span>)),</span>
+<span id="cb7-236"><a href="#cb7-236" aria-hidden="true" tabindex="-1"></a>    <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">75</span>),</span>
+<span id="cb7-237"><a href="#cb7-237" aria-hidden="true" tabindex="-1"></a>    <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">70</span>, <span class="at">by =</span> <span class="dv">10</span>)</span>
+<span id="cb7-238"><a href="#cb7-238" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb7-239"><a href="#cb7-239" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb7-240"><a href="#cb7-240" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"The Americas Deliver Highest Wellbeing Efficiency Despite Lower Demographic Scale"</span>,</span>
+<span id="cb7-241"><a href="#cb7-241" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Width represents total continent population; Column height reflects population-weighted Happy Planet Index."</span>,</span>
+<span id="cb7-242"><a href="#cb7-242" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"Source: Happy Planet Index (2024 Edition) &amp; UN Population Division | EPPS 6356 Hackathon"</span></span>
+<span id="cb7-243"><a href="#cb7-243" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb7-244"><a href="#cb7-244" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_hackathon</span>(<span class="at">legend_pos =</span> <span class="st">"top"</span>) <span class="sc">+</span></span>
+<span id="cb7-245"><a href="#cb7-245" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb7-246"><a href="#cb7-246" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.title.y =</span> <span class="fu">element_text</span>(</span>
+<span id="cb7-247"><a href="#cb7-247" aria-hidden="true" tabindex="-1"></a>      <span class="at">angle =</span> <span class="dv">90</span>,</span>
+<span id="cb7-248"><a href="#cb7-248" aria-hidden="true" tabindex="-1"></a>      <span class="at">vjust =</span> <span class="dv">2</span>,</span>
+<span id="cb7-249"><a href="#cb7-249" aria-hidden="true" tabindex="-1"></a>      <span class="at">margin =</span> <span class="fu">margin</span>(<span class="at">r =</span> <span class="dv">10</span>)</span>
+<span id="cb7-250"><a href="#cb7-250" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb7-251"><a href="#cb7-251" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">size =</span> <span class="fu">rel</span>(<span class="fl">0.85</span>)),</span>
+<span id="cb7-252"><a href="#cb7-252" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.margin =</span> <span class="fu">margin</span>(<span class="at">b =</span> <span class="dv">4</span>)</span>
+<span id="cb7-253"><a href="#cb7-253" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb7-254"><a href="#cb7-254" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-255"><a href="#cb7-255" aria-hidden="true" tabindex="-1"></a>p1</span>
+<span id="cb7-256"><a href="#cb7-256" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb7-257"><a href="#cb7-257" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-258"><a href="#cb7-258" aria-hidden="true" tabindex="-1"></a><span class="fu">### Analytical Takeaway</span></span>
+<span id="cb7-259"><a href="#cb7-259" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>**Demographic Scale vs. Ecological Efficiency:** While Asia represents over 60% of the sample's population ($\approx 3.9$ billion people), its aggregate HPI (44.6) is heavily constrained by industrial carbon throughput. In contrast, the Americas achieve the highest population-weighted efficiency (49.8), demonstrating that high human wellbeing can be sustained at lower ecological impact.</span>
+<span id="cb7-260"><a href="#cb7-260" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-261"><a href="#cb7-261" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb7-262"><a href="#cb7-262" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-263"><a href="#cb7-263" aria-hidden="true" tabindex="-1"></a><span class="fu">## Chart 2: Table with Embedded Distribution Bars</span></span>
+<span id="cb7-264"><a href="#cb7-264" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-265"><a href="#cb7-265" aria-hidden="true" tabindex="-1"></a><span class="fu">### Implementation (Comparison: Many Categories across Multiple Indicators)</span></span>
+<span id="cb7-266"><a href="#cb7-266" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-267"><a href="#cb7-267" aria-hidden="true" tabindex="-1"></a>Chart 2 presents 25 representative nations across development tiers. Built with <span class="in">`gt`</span> and <span class="in">`gtExtras`</span>, it embeds inline distribution bars directly into the data matrix, enabling pre-attentive length decoding along an aligned baseline while maintaining analytical precision<span class="co">[</span><span class="ot">cite: 4, 10</span><span class="co">]</span>.</span>
+<span id="cb7-268"><a href="#cb7-268" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-271"><a href="#cb7-271" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb7-272"><a href="#cb7-272" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: chart-2-gt-table</span></span>
+<span id="cb7-273"><a href="#cb7-273" aria-hidden="true" tabindex="-1"></a><span class="co">#| code-summary: "Render Chart 2: gt + gtExtras Formatted Data Table"</span></span>
+<span id="cb7-274"><a href="#cb7-274" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-275"><a href="#cb7-275" aria-hidden="true" tabindex="-1"></a>df_table <span class="ot">&lt;-</span> df_chart2_raw <span class="sc">%&gt;%</span></span>
+<span id="cb7-276"><a href="#cb7-276" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(hpi)) <span class="sc">%&gt;%</span></span>
+<span id="cb7-277"><a href="#cb7-277" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb7-278"><a href="#cb7-278" aria-hidden="true" tabindex="-1"></a>    <span class="at">footprint_bar =</span> (footprint <span class="sc">/</span> <span class="fu">max</span>(footprint)) <span class="sc">*</span> <span class="dv">100</span>,</span>
+<span id="cb7-279"><a href="#cb7-279" aria-hidden="true" tabindex="-1"></a>    <span class="at">hpi_bar =</span> hpi</span>
+<span id="cb7-280"><a href="#cb7-280" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb7-281"><a href="#cb7-281" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(</span>
+<span id="cb7-282"><a href="#cb7-282" aria-hidden="true" tabindex="-1"></a>    country, continent, hpi, hpi_bar,</span>
+<span id="cb7-283"><a href="#cb7-283" aria-hidden="true" tabindex="-1"></a>    life_exp, wellbeing, footprint, footprint_bar, gdp_pc</span>
+<span id="cb7-284"><a href="#cb7-284" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb7-285"><a href="#cb7-285" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-286"><a href="#cb7-286" aria-hidden="true" tabindex="-1"></a>tbl_hpi <span class="ot">&lt;-</span> df_table <span class="sc">%&gt;%</span></span>
+<span id="cb7-287"><a href="#cb7-287" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb7-288"><a href="#cb7-288" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_header</span>(</span>
+<span id="cb7-289"><a href="#cb7-289" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="fu">md</span>(<span class="st">"**High National Income Fails to Guarantee Ecological Efficiency Across Global Economies**"</span>),</span>
+<span id="cb7-290"><a href="#cb7-290" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Benchmarking 25 representative economies across life expectancy, ladder-of-life wellbeing, and ecological footprint"</span></span>
+<span id="cb7-291"><a href="#cb7-291" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb7-292"><a href="#cb7-292" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cols_label</span>(</span>
+<span id="cb7-293"><a href="#cb7-293" aria-hidden="true" tabindex="-1"></a>    <span class="at">country =</span> <span class="st">"Country"</span>,</span>
+<span id="cb7-294"><a href="#cb7-294" aria-hidden="true" tabindex="-1"></a>    <span class="at">continent =</span> <span class="st">"Continent"</span>,</span>
+<span id="cb7-295"><a href="#cb7-295" aria-hidden="true" tabindex="-1"></a>    <span class="at">hpi =</span> <span class="st">"HPI Score"</span>,</span>
+<span id="cb7-296"><a href="#cb7-296" aria-hidden="true" tabindex="-1"></a>    <span class="at">hpi_bar =</span> <span class="st">"Efficiency Bar"</span>,</span>
+<span id="cb7-297"><a href="#cb7-297" aria-hidden="true" tabindex="-1"></a>    <span class="at">life_exp =</span> <span class="st">"Life Expectancy (Years)"</span>,</span>
+<span id="cb7-298"><a href="#cb7-298" aria-hidden="true" tabindex="-1"></a>    <span class="at">wellbeing =</span> <span class="st">"Wellbeing (0–10)"</span>,</span>
+<span id="cb7-299"><a href="#cb7-299" aria-hidden="true" tabindex="-1"></a>    <span class="at">footprint =</span> <span class="st">"Footprint (gha/capita)"</span>,</span>
+<span id="cb7-300"><a href="#cb7-300" aria-hidden="true" tabindex="-1"></a>    <span class="at">footprint_bar =</span> <span class="st">"Pressure Bar"</span>,</span>
+<span id="cb7-301"><a href="#cb7-301" aria-hidden="true" tabindex="-1"></a>    <span class="at">gdp_pc =</span> <span class="st">"GDP per Capita (USD)"</span></span>
+<span id="cb7-302"><a href="#cb7-302" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb7-303"><a href="#cb7-303" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cols_width</span>(</span>
+<span id="cb7-304"><a href="#cb7-304" aria-hidden="true" tabindex="-1"></a>    country <span class="sc">~</span> <span class="fu">px</span>(<span class="dv">130</span>),</span>
+<span id="cb7-305"><a href="#cb7-305" aria-hidden="true" tabindex="-1"></a>    continent <span class="sc">~</span> <span class="fu">px</span>(<span class="dv">95</span>),</span>
+<span id="cb7-306"><a href="#cb7-306" aria-hidden="true" tabindex="-1"></a>    hpi <span class="sc">~</span> <span class="fu">px</span>(<span class="dv">70</span>),</span>
+<span id="cb7-307"><a href="#cb7-307" aria-hidden="true" tabindex="-1"></a>    hpi_bar <span class="sc">~</span> <span class="fu">px</span>(<span class="dv">105</span>),</span>
+<span id="cb7-308"><a href="#cb7-308" aria-hidden="true" tabindex="-1"></a>    life_exp <span class="sc">~</span> <span class="fu">px</span>(<span class="dv">100</span>),</span>
+<span id="cb7-309"><a href="#cb7-309" aria-hidden="true" tabindex="-1"></a>    wellbeing <span class="sc">~</span> <span class="fu">px</span>(<span class="dv">80</span>),</span>
+<span id="cb7-310"><a href="#cb7-310" aria-hidden="true" tabindex="-1"></a>    footprint <span class="sc">~</span> <span class="fu">px</span>(<span class="dv">95</span>),</span>
+<span id="cb7-311"><a href="#cb7-311" aria-hidden="true" tabindex="-1"></a>    footprint_bar <span class="sc">~</span> <span class="fu">px</span>(<span class="dv">105</span>),</span>
+<span id="cb7-312"><a href="#cb7-312" aria-hidden="true" tabindex="-1"></a>    gdp_pc <span class="sc">~</span> <span class="fu">px</span>(<span class="dv">120</span>)</span>
+<span id="cb7-313"><a href="#cb7-313" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb7-314"><a href="#cb7-314" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fmt_number</span>(</span>
+<span id="cb7-315"><a href="#cb7-315" aria-hidden="true" tabindex="-1"></a>    <span class="at">columns =</span> <span class="fu">c</span>(hpi, life_exp, wellbeing),</span>
+<span id="cb7-316"><a href="#cb7-316" aria-hidden="true" tabindex="-1"></a>    <span class="at">decimals =</span> <span class="dv">1</span></span>
+<span id="cb7-317"><a href="#cb7-317" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb7-318"><a href="#cb7-318" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fmt_number</span>(</span>
+<span id="cb7-319"><a href="#cb7-319" aria-hidden="true" tabindex="-1"></a>    <span class="at">columns =</span> <span class="fu">c</span>(footprint),</span>
+<span id="cb7-320"><a href="#cb7-320" aria-hidden="true" tabindex="-1"></a>    <span class="at">decimals =</span> <span class="dv">2</span></span>
+<span id="cb7-321"><a href="#cb7-321" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb7-322"><a href="#cb7-322" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fmt_currency</span>(</span>
+<span id="cb7-323"><a href="#cb7-323" aria-hidden="true" tabindex="-1"></a>    <span class="at">columns =</span> <span class="fu">c</span>(gdp_pc),</span>
+<span id="cb7-324"><a href="#cb7-324" aria-hidden="true" tabindex="-1"></a>    <span class="at">currency =</span> <span class="st">"USD"</span>,</span>
+<span id="cb7-325"><a href="#cb7-325" aria-hidden="true" tabindex="-1"></a>    <span class="at">decimals =</span> <span class="dv">0</span></span>
+<span id="cb7-326"><a href="#cb7-326" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb7-327"><a href="#cb7-327" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt_plt_bar_pct</span>(</span>
+<span id="cb7-328"><a href="#cb7-328" aria-hidden="true" tabindex="-1"></a>    <span class="at">column =</span> hpi_bar,</span>
+<span id="cb7-329"><a href="#cb7-329" aria-hidden="true" tabindex="-1"></a>    <span class="at">scaled =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb7-330"><a href="#cb7-330" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"#0072B2"</span>,</span>
+<span id="cb7-331"><a href="#cb7-331" aria-hidden="true" tabindex="-1"></a>    <span class="at">background =</span> <span class="st">"#EAEAEA"</span>,</span>
+<span id="cb7-332"><a href="#cb7-332" aria-hidden="true" tabindex="-1"></a>    <span class="at">height =</span> <span class="dv">14</span></span>
+<span id="cb7-333"><a href="#cb7-333" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb7-334"><a href="#cb7-334" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt_plt_bar_pct</span>(</span>
+<span id="cb7-335"><a href="#cb7-335" aria-hidden="true" tabindex="-1"></a>    <span class="at">column =</span> footprint_bar,</span>
+<span id="cb7-336"><a href="#cb7-336" aria-hidden="true" tabindex="-1"></a>    <span class="at">scaled =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb7-337"><a href="#cb7-337" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"#D55E00"</span>,</span>
+<span id="cb7-338"><a href="#cb7-338" aria-hidden="true" tabindex="-1"></a>    <span class="at">background =</span> <span class="st">"#EAEAEA"</span>,</span>
+<span id="cb7-339"><a href="#cb7-339" aria-hidden="true" tabindex="-1"></a>    <span class="at">height =</span> <span class="dv">14</span></span>
+<span id="cb7-340"><a href="#cb7-340" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb7-341"><a href="#cb7-341" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt_badge</span>(</span>
+<span id="cb7-342"><a href="#cb7-342" aria-hidden="true" tabindex="-1"></a>    <span class="at">column =</span> continent,</span>
+<span id="cb7-343"><a href="#cb7-343" aria-hidden="true" tabindex="-1"></a>    <span class="at">palette =</span> pal_continent</span>
+<span id="cb7-344"><a href="#cb7-344" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb7-345"><a href="#cb7-345" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cols_align</span>(</span>
+<span id="cb7-346"><a href="#cb7-346" aria-hidden="true" tabindex="-1"></a>    <span class="at">align =</span> <span class="st">"left"</span>,</span>
+<span id="cb7-347"><a href="#cb7-347" aria-hidden="true" tabindex="-1"></a>    <span class="at">columns =</span> <span class="fu">c</span>(country, continent)</span>
+<span id="cb7-348"><a href="#cb7-348" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb7-349"><a href="#cb7-349" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cols_align</span>(</span>
+<span id="cb7-350"><a href="#cb7-350" aria-hidden="true" tabindex="-1"></a>    <span class="at">align =</span> <span class="st">"center"</span>,</span>
+<span id="cb7-351"><a href="#cb7-351" aria-hidden="true" tabindex="-1"></a>    <span class="at">columns =</span> <span class="fu">c</span>(hpi, hpi_bar, footprint, footprint_bar)</span>
+<span id="cb7-352"><a href="#cb7-352" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb7-353"><a href="#cb7-353" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cols_align</span>(</span>
+<span id="cb7-354"><a href="#cb7-354" aria-hidden="true" tabindex="-1"></a>    <span class="at">align =</span> <span class="st">"right"</span>,</span>
+<span id="cb7-355"><a href="#cb7-355" aria-hidden="true" tabindex="-1"></a>    <span class="at">columns =</span> <span class="fu">c</span>(life_exp, wellbeing, gdp_pc)</span>
+<span id="cb7-356"><a href="#cb7-356" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb7-357"><a href="#cb7-357" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_options</span>(</span>
+<span id="cb7-358"><a href="#cb7-358" aria-hidden="true" tabindex="-1"></a>    <span class="at">table.width =</span> <span class="fu">px</span>(<span class="dv">900</span>),</span>
+<span id="cb7-359"><a href="#cb7-359" aria-hidden="true" tabindex="-1"></a>    <span class="at">table.font.names =</span> <span class="st">"sans-serif"</span>,</span>
+<span id="cb7-360"><a href="#cb7-360" aria-hidden="true" tabindex="-1"></a>    <span class="at">table.font.size =</span> <span class="fu">px</span>(<span class="dv">13</span>),</span>
+<span id="cb7-361"><a href="#cb7-361" aria-hidden="true" tabindex="-1"></a>    <span class="at">heading.title.font.size =</span> <span class="fu">px</span>(<span class="dv">17</span>),</span>
+<span id="cb7-362"><a href="#cb7-362" aria-hidden="true" tabindex="-1"></a>    <span class="at">heading.title.font.weight =</span> <span class="st">"bold"</span>,</span>
+<span id="cb7-363"><a href="#cb7-363" aria-hidden="true" tabindex="-1"></a>    <span class="at">heading.subtitle.font.size =</span> <span class="fu">px</span>(<span class="dv">13</span>),</span>
+<span id="cb7-364"><a href="#cb7-364" aria-hidden="true" tabindex="-1"></a>    <span class="at">heading.align =</span> <span class="st">"left"</span>,</span>
+<span id="cb7-365"><a href="#cb7-365" aria-hidden="true" tabindex="-1"></a>    <span class="at">column_labels.font.size =</span> <span class="fu">px</span>(<span class="dv">12</span>),</span>
+<span id="cb7-366"><a href="#cb7-366" aria-hidden="true" tabindex="-1"></a>    <span class="at">column_labels.font.weight =</span> <span class="st">"bold"</span>,</span>
+<span id="cb7-367"><a href="#cb7-367" aria-hidden="true" tabindex="-1"></a>    <span class="at">column_labels.background.color =</span> <span class="st">"#F4F6F9"</span>,</span>
+<span id="cb7-368"><a href="#cb7-368" aria-hidden="true" tabindex="-1"></a>    <span class="at">row.striping.include_table_body =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb7-369"><a href="#cb7-369" aria-hidden="true" tabindex="-1"></a>    <span class="at">row.striping.background_color =</span> <span class="st">"#FAFAFA"</span>,</span>
+<span id="cb7-370"><a href="#cb7-370" aria-hidden="true" tabindex="-1"></a>    <span class="at">table.border.top.style =</span> <span class="st">"solid"</span>,</span>
+<span id="cb7-371"><a href="#cb7-371" aria-hidden="true" tabindex="-1"></a>    <span class="at">table.border.top.color =</span> <span class="st">"#333333"</span>,</span>
+<span id="cb7-372"><a href="#cb7-372" aria-hidden="true" tabindex="-1"></a>    <span class="at">table.border.top.width =</span> <span class="fu">px</span>(<span class="dv">2</span>),</span>
+<span id="cb7-373"><a href="#cb7-373" aria-hidden="true" tabindex="-1"></a>    <span class="at">table.border.bottom.style =</span> <span class="st">"solid"</span>,</span>
+<span id="cb7-374"><a href="#cb7-374" aria-hidden="true" tabindex="-1"></a>    <span class="at">table.border.bottom.color =</span> <span class="st">"#333333"</span>,</span>
+<span id="cb7-375"><a href="#cb7-375" aria-hidden="true" tabindex="-1"></a>    <span class="at">table.border.bottom.width =</span> <span class="fu">px</span>(<span class="dv">2</span>),</span>
+<span id="cb7-376"><a href="#cb7-376" aria-hidden="true" tabindex="-1"></a>    <span class="at">data_row.padding =</span> <span class="fu">px</span>(<span class="dv">5</span>)</span>
+<span id="cb7-377"><a href="#cb7-377" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb7-378"><a href="#cb7-378" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_source_note</span>(</span>
+<span id="cb7-379"><a href="#cb7-379" aria-hidden="true" tabindex="-1"></a>    <span class="at">source_note =</span> <span class="fu">md</span>(<span class="st">"Source: Happy Planet Index 2024; World Bank Development Indicators. Table compiled for EPPS 6356 Chart Hackathon."</span>)</span>
+<span id="cb7-380"><a href="#cb7-380" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb7-381"><a href="#cb7-381" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-382"><a href="#cb7-382" aria-hidden="true" tabindex="-1"></a>tbl_hpi</span>
+<span id="cb7-383"><a href="#cb7-383" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb7-384"><a href="#cb7-384" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-385"><a href="#cb7-385" aria-hidden="true" tabindex="-1"></a><span class="fu">### Analytical Takeaway</span></span>
+<span id="cb7-386"><a href="#cb7-386" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>**The Decoupling Paradox:** Economies with high GDP per capita (e.g., Luxembourg at \$116,300 and the United States at \$63,500) exhibit disproportionate ecological footprints (12.80 and 7.80 gha/capita), pulling their overall HPI scores below 45<span class="co">[</span><span class="ot">cite: 4, 10</span><span class="co">]</span>. Middle-income economies like Costa Rica (HPI 62.1) deliver comparable life expectancy with less than one-third of the ecological throughput<span class="co">[</span><span class="ot">cite: 4, 10</span><span class="co">]</span>.</span>
+<span id="cb7-387"><a href="#cb7-387" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-388"><a href="#cb7-388" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb7-389"><a href="#cb7-389" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-390"><a href="#cb7-390" aria-hidden="true" tabindex="-1"></a><span class="fu">## Chart 3: Horizontal Bar Chart of Ranked Cohorts</span></span>
+<span id="cb7-391"><a href="#cb7-391" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-392"><a href="#cb7-392" aria-hidden="true" tabindex="-1"></a><span class="fu">### Implementation (Comparison: One Variable, Many Items)</span></span>
+<span id="cb7-393"><a href="#cb7-393" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-394"><a href="#cb7-394" aria-hidden="true" tabindex="-1"></a>Chart 3 benchmarks the Top 20 and Bottom 20 nations. Factor levels are ordered by continuous HPI score using <span class="in">`forcats::fct_reorder()`</span>, eliminating alphabetical friction<span class="co">[</span><span class="ot">cite: 4, 11</span><span class="co">]</span>. The visual encoding uses an accessible, non-green Okabe-Ito color scheme (Okabe-Ito Blue <span class="in">`#0072B2`</span> vs. Vermilion <span class="in">`#D55E00`</span>)<span class="co">[</span><span class="ot">cite: 11</span><span class="co">]</span>.</span>
+<span id="cb7-395"><a href="#cb7-395" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-398"><a href="#cb7-398" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb7-399"><a href="#cb7-399" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: chart-3-bar-chart</span></span>
+<span id="cb7-400"><a href="#cb7-400" aria-hidden="true" tabindex="-1"></a><span class="co">#| code-summary: "Render Chart 3: geom_col() + fct_reorder() Horizontal Ranked Bars"</span></span>
+<span id="cb7-401"><a href="#cb7-401" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-width: 11.5</span></span>
+<span id="cb7-402"><a href="#cb7-402" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-height: 7.8</span></span>
+<span id="cb7-403"><a href="#cb7-403" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-404"><a href="#cb7-404" aria-hidden="true" tabindex="-1"></a>df_chart3 <span class="ot">&lt;-</span> df_chart3_raw <span class="sc">%&gt;%</span></span>
+<span id="cb7-405"><a href="#cb7-405" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb7-406"><a href="#cb7-406" aria-hidden="true" tabindex="-1"></a>    <span class="at">country_ordered =</span> <span class="fu">fct_reorder</span>(country, hpi),</span>
+<span id="cb7-407"><a href="#cb7-407" aria-hidden="true" tabindex="-1"></a>    <span class="at">group =</span> <span class="fu">factor</span>(group, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Top 20"</span>, <span class="st">"Bottom 20"</span>))</span>
+<span id="cb7-408"><a href="#cb7-408" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb7-409"><a href="#cb7-409" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-410"><a href="#cb7-410" aria-hidden="true" tabindex="-1"></a>p3 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df_chart3, <span class="fu">aes</span>(<span class="at">x =</span> hpi, <span class="at">y =</span> country_ordered, <span class="at">fill =</span> group)) <span class="sc">+</span></span>
+<span id="cb7-411"><a href="#cb7-411" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(</span>
+<span id="cb7-412"><a href="#cb7-412" aria-hidden="true" tabindex="-1"></a>    <span class="at">width =</span> <span class="fl">0.72</span>,</span>
+<span id="cb7-413"><a href="#cb7-413" aria-hidden="true" tabindex="-1"></a>    <span class="at">show.legend =</span> <span class="cn">FALSE</span></span>
+<span id="cb7-414"><a href="#cb7-414" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb7-415"><a href="#cb7-415" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(</span>
+<span id="cb7-416"><a href="#cb7-416" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">label =</span> <span class="fu">sprintf</span>(<span class="st">"%.1f"</span>, hpi)),</span>
+<span id="cb7-417"><a href="#cb7-417" aria-hidden="true" tabindex="-1"></a>    <span class="at">hjust =</span> <span class="sc">-</span><span class="fl">0.20</span>,</span>
+<span id="cb7-418"><a href="#cb7-418" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="fl">3.1</span>,</span>
+<span id="cb7-419"><a href="#cb7-419" aria-hidden="true" tabindex="-1"></a>    <span class="at">fontface =</span> <span class="st">"bold"</span>,</span>
+<span id="cb7-420"><a href="#cb7-420" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"#222222"</span></span>
+<span id="cb7-421"><a href="#cb7-421" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb7-422"><a href="#cb7-422" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(</span>
+<span id="cb7-423"><a href="#cb7-423" aria-hidden="true" tabindex="-1"></a>    <span class="sc">~</span> group,</span>
+<span id="cb7-424"><a href="#cb7-424" aria-hidden="true" tabindex="-1"></a>    <span class="at">scales =</span> <span class="st">"free_y"</span>,</span>
+<span id="cb7-425"><a href="#cb7-425" aria-hidden="true" tabindex="-1"></a>    <span class="at">ncol =</span> <span class="dv">2</span></span>
+<span id="cb7-426"><a href="#cb7-426" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb7-427"><a href="#cb7-427" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(</span>
+<span id="cb7-428"><a href="#cb7-428" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> <span class="fu">c</span>(</span>
+<span id="cb7-429"><a href="#cb7-429" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Top 20"</span>    <span class="ot">=</span> <span class="st">"#0072B2"</span>,  <span class="co"># Okabe-Ito Blue</span></span>
+<span id="cb7-430"><a href="#cb7-430" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Bottom 20"</span> <span class="ot">=</span> <span class="st">"#D55E00"</span>   <span class="co"># Okabe-Ito Vermilion</span></span>
+<span id="cb7-431"><a href="#cb7-431" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb7-432"><a href="#cb7-432" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb7-433"><a href="#cb7-433" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(</span>
+<span id="cb7-434"><a href="#cb7-434" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> <span class="st">"Happy Planet Index Score (0–100 Scale)"</span>,</span>
+<span id="cb7-435"><a href="#cb7-435" aria-hidden="true" tabindex="-1"></a>    <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">74</span>),</span>
+<span id="cb7-436"><a href="#cb7-436" aria-hidden="true" tabindex="-1"></a>    <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">70</span>, <span class="at">by =</span> <span class="dv">10</span>),</span>
+<span id="cb7-437"><a href="#cb7-437" aria-hidden="true" tabindex="-1"></a>    <span class="at">expand =</span> <span class="fu">expansion</span>(<span class="at">mult =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.02</span>))</span>
+<span id="cb7-438"><a href="#cb7-438" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb7-439"><a href="#cb7-439" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_discrete</span>(<span class="at">name =</span> <span class="st">"Country"</span>) <span class="sc">+</span></span>
+<span id="cb7-440"><a href="#cb7-440" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb7-441"><a href="#cb7-441" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Latin American Nations Lead Sustainable Efficiency While Fossil Rentiers and Fragile States Lag"</span>,</span>
+<span id="cb7-442"><a href="#cb7-442" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Comparing the 20 highest- and 20 lowest-ranked global economies on the 2024 Happy Planet Index."</span>,</span>
+<span id="cb7-443"><a href="#cb7-443" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"Source: Happy Planet Index (2024 Edition) | EPPS 6356 Hackathon"</span></span>
+<span id="cb7-444"><a href="#cb7-444" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb7-445"><a href="#cb7-445" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_hackathon</span>(<span class="at">legend_pos =</span> <span class="st">"none"</span>) <span class="sc">+</span></span>
+<span id="cb7-446"><a href="#cb7-446" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb7-447"><a href="#cb7-447" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="fu">rel</span>(<span class="fl">0.78</span>), <span class="at">color =</span> <span class="st">"#222222"</span>),</span>
+<span id="cb7-448"><a href="#cb7-448" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.spacing =</span> <span class="fu">unit</span>(<span class="fl">1.5</span>, <span class="st">"lines"</span>),</span>
+<span id="cb7-449"><a href="#cb7-449" aria-hidden="true" tabindex="-1"></a>    <span class="at">strip.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="fu">rel</span>(<span class="fl">0.95</span>), <span class="at">face =</span> <span class="st">"bold"</span>)</span>
+<span id="cb7-450"><a href="#cb7-450" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb7-451"><a href="#cb7-451" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-452"><a href="#cb7-452" aria-hidden="true" tabindex="-1"></a>p3</span>
+<span id="cb7-453"><a href="#cb7-453" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb7-454"><a href="#cb7-454" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-455"><a href="#cb7-455" aria-hidden="true" tabindex="-1"></a><span class="fu">### Analytical Takeaway</span></span>
+<span id="cb7-456"><a href="#cb7-456" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>**Structural Distribution Divergence:** The Top 20 cohort is dominated by Latin American nations and high-efficiency island nations (e.g., Vanuatu)<span class="co">[</span><span class="ot">cite: 4, 11</span><span class="co">]</span>. The Bottom 20 features carbon-intensive fossil fuel exporters (e.g., Qatar, UAE, Mongolia) alongside developing economies with severe health infrastructure constraints (e.g., Central African Republic), highlighting two distinct drivers of low sustainable efficiency<span class="co">[</span><span class="ot">cite: 4, 11</span><span class="co">]</span>.</span>
+<span id="cb7-457"><a href="#cb7-457" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-458"><a href="#cb7-458" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb7-459"><a href="#cb7-459" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-460"><a href="#cb7-460" aria-hidden="true" tabindex="-1"></a><span class="fu">## Computational Environment and Session Info</span></span>
+<span id="cb7-461"><a href="#cb7-461" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-464"><a href="#cb7-464" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb7-465"><a href="#cb7-465" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: session-info</span></span>
+<span id="cb7-466"><a href="#cb7-466" aria-hidden="true" tabindex="-1"></a><span class="co">#| code-summary: "Display sessionInfo() for Reproducibility"</span></span>
+<span id="cb7-467"><a href="#cb7-467" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-468"><a href="#cb7-468" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span>
+<span id="cb7-469"><a href="#cb7-469" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+</code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+</div></div></div></div></div>
 </div> <!-- /content -->
 
 

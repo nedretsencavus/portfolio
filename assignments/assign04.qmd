@@ -1,5 +1,459 @@
 ---
-title: "assign04"
-format: html
+title: "48-Hour Chart Hackathon: Visualizing the Happy Planet Index"
+subtitle: "EPPS 6356 Data Visualization | Assignment 4"
+author: "Team Hackathon (Nedret Sen-Cavus, Anugraha Samuel Gloria,Shao-Kang)"
+date: "October 2, 2026"
+format:
+  html:
+    theme: cosmo
+    toc: true
+    toc-depth: 3
+    code-fold: show
+    code-tools: true
+    df-print: paged
+    fig-width: 10.5
+    fig-height: 6.5
+---
+  
+  ## Executive Overview
+  
+  This report completes Assignment 4 (48-Hour Chart Hackathon) for EPPS 6356 Data Visualization. We implement the core chart paradigms from Andrew Abela's *Chart Thought-Starter* (Comparison: Among Items branch) using the Happy Planet Index (HPI) dataset. All figures share a unified styling system defined in `R/theme.R`, adhere to Edward Tufte's data-ink maximization[cite: 4, 16], utilize color-blind safe palettes (Okabe & Ito 2008)[cite: 11], and encode comparisons along common spatial baselines (Cleveland & McGill 1984).
+
+```{r}
+#| label: setup
+#| code-summary: "Load Dependencies, Theme, and Processed Datasets"
+
+pal_okabe_ito <- c(
+  "orange"        = "#E69F00",
+  "sky_blue"      = "#56B4E9",
+  "bluish_green"  = "#009E73",
+  "yellow"        = "#F0E442",
+  "blue"          = "#0072B2",
+  "vermilion"     = "#D55E00",
+  "reddish_purple"= "#CC79A7",
+  "dark_gray"     = "#333333"
+)
+
+pal_continent <- c(
+  "Africa"   = "#E69F00", # Orange
+  "Americas" = "#56B4E9", # Sky Blue
+  "Asia"     = "#009E73", # Bluish Green
+  "Europe"   = "#0072B2", # Blue
+  "Oceania"  = "#CC79A7"  # Reddish Purple
+)
+
+pal_rank_comparison <- c(
+  "Top 20"    = "#009E73", # Greenish (high wellbeing / sustainable efficiency)
+  "Bottom 20" = "#D55E00"  # Vermilion (low wellbeing / high footprint)
+)
+
+scale_fill_continent <- function(...) {
+  scale_fill_manual(values = pal_continent, ...)
+}
+
+scale_color_continent <- function(...) {
+  scale_color_manual(values = pal_continent, ...)
+}
+
+scale_fill_hackathon <- function(values = pal_okabe_ito, ...) {
+  scale_fill_manual(values = values, ...)
+}
+
+scale_color_hackathon <- function(values = pal_okabe_ito, ...) {
+  scale_color_manual(values = values, ...)
+}
+
+suppressPackageStartupMessages({
+  library(ggplot2)
+  library(dplyr)
+  library(tidyr)
+  library(forcats)
+  library(scales)
+  library(gt)
+  library(gtExtras)
+})
+
+hpi_clean     <- readRDS("../data/hpi_clean.rds")
+df_chart1     <- readRDS("../data/hpi_chart1.rds")
+df_chart2_raw <- readRDS("../data/hpi_chart2.rds")
+df_chart3_raw <- readRDS("../data/hpi_chart3.rds")
+```
+
+---
+  
+  ## Chart 1: Variable-Width Column Chart
+  
+  ### Implementation (Comparison: Two Variables per Item)
+  
+  Chart 1 maps two continuous macro-demographic dimensions simultaneously using `geom_rect()`: continental population determines rectangle width ($W_i = xmax_i - xmin_i$), while population-weighted Happy Planet Index determines column height ($ymax_i$)[cite: 4, 5]. Interior polygon text has been eliminated to maximize the data-ink ratio and prevent label clipping across narrower columns (e.g., Oceania)[cite: 4, 5].
+
+```{r}
+#| label: chart-1-variable-width
+#| code-summary: "Render Chart 1: geom_rect() Variable-Width Columns"
+#| fig-width: 10.5
+#| fig-height: 6.2
+
+theme_hackathon <- function(base_size = 11,
+                            base_family = "sans",
+                            axis_slant = FALSE,
+                            legend_pos = "top") {
+  
+  th <- theme_minimal(base_size = base_size, base_family = base_family) %+replace%
+    theme(
+      plot.title = element_text(
+        size = rel(1.30),
+        face = "bold",
+        color = "#111111",
+        hjust = 0,
+        margin = margin(b = 6)
+      ),
+      plot.subtitle = element_text(
+        size = rel(0.95),
+        color = "#444444",
+        hjust = 0,
+        margin = margin(b = 12)
+      ),
+      plot.caption = element_text(
+        size = rel(0.75),
+        color = "#666666",
+        hjust = 0,
+        margin = margin(t = 12)
+      ),
+      
+      axis.title.x = element_text(
+        size = rel(0.90),
+        face = "bold",
+        color = "#222222",
+        margin = margin(t = 8)
+      ),
+      axis.title.y = element_text(
+        size = rel(0.90),
+        face = "bold",
+        color = "#222222",
+        margin = margin(r = 8)
+      ),
+      axis.text = element_text(
+        size = rel(0.82),
+        color = "#333333"
+      ),
+      axis.line = element_line(
+        color = "#777777",
+        linewidth = 0.45
+      ),
+      axis.ticks = element_line(
+        color = "#777777",
+        linewidth = 0.40
+      ),
+      
+      panel.grid.major = element_line(
+        color = "#ECECEC",
+        linewidth = 0.35
+      ),
+      panel.grid.minor = element_blank(),
+      panel.background = element_rect(
+        fill = "#FFFFFF",
+        color = NA
+      ),
+      plot.background = element_rect(
+        fill = "#FFFFFF",
+        color = NA
+      ),
+      
+      legend.position = legend_pos,
+      legend.title = element_text(
+        size = rel(0.85),
+        face = "bold",
+        color = "#222222"
+      ),
+      legend.text = element_text(
+        size = rel(0.80),
+        color = "#333333"
+      ),
+      legend.key = element_blank(),
+      legend.background = element_blank(),
+      
+      strip.background = element_rect(
+        fill = "#F2F4F8",
+        color = NA
+      ),
+      strip.text = element_text(
+        size = rel(0.88),
+        face = "bold",
+        color = "#222222",
+        margin = margin(t = 4, b = 4)
+      ),
+      
+      plot.margin = margin(t = 16, r = 18, b = 14, l = 16),
+      plot.title.position = "plot",
+      plot.caption.position = "plot"
+    )
+  
+  if (isTRUE(axis_slant)) {
+    th <- th + theme(
+      axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1)
+    )
+  }
+  
+  return(th)
+}
+
+p1 <- ggplot(df_chart1) +
+  geom_rect(
+    aes(
+      xmin = xmin,
+      xmax = xmax,
+      ymin = 0,
+      ymax = ymax,
+      fill = continent
+    ),
+    color = "#FFFFFF",
+    linewidth = 0.7
+  ) +
+  geom_text(
+    aes(
+      x = xcenter,
+      y = ymax + 1.6,
+      label = sprintf("%.1f", ymax)
+    ),
+    color = "#222222",
+    fontface = "bold",
+    size = 3.4
+  ) +
+  scale_fill_continent(name = "Continent") +
+  scale_x_continuous(
+    name = "Cumulative Global Population (Millions)",
+    expand = expansion(mult = c(0, 0.02)),
+    breaks = seq(0, 5000, by = 1000),
+    labels = comma_format(suffix = "M")
+  ) +
+  scale_y_continuous(
+    name = "Population-Weighted Mean HPI (Score: 0–100)",
+    expand = expansion(mult = c(0, 0.05)),
+    limits = c(0, 75),
+    breaks = seq(0, 70, by = 10)
+  ) +
+  labs(
+    title = "The Americas Deliver Highest Wellbeing Efficiency Despite Lower Demographic Scale",
+    subtitle = "Width represents total continent population; Column height reflects population-weighted Happy Planet Index.",
+    caption = "Source: Happy Planet Index (2024 Edition) & UN Population Division | EPPS 6356 Hackathon"
+  ) +
+  theme_hackathon(legend_pos = "top") +
+  theme(
+    axis.title.y = element_text(
+      angle = 90,
+      vjust = 2,
+      margin = margin(r = 10)
+    ),
+    legend.title = element_text(face = "bold", size = rel(0.85)),
+    legend.margin = margin(b = 4)
+  )
+
+p1
+```
+
+### Analytical Takeaway
+* **Demographic Scale vs. Ecological Efficiency:** While Asia represents over 60% of the sample's population ($\approx 3.9$ billion people), its aggregate HPI (44.6) is heavily constrained by industrial carbon throughput. In contrast, the Americas achieve the highest population-weighted efficiency (49.8), demonstrating that high human wellbeing can be sustained at lower ecological impact.
+
 ---
 
+## Chart 2: Table with Embedded Distribution Bars
+
+### Implementation (Comparison: Many Categories across Multiple Indicators)
+
+Chart 2 presents 25 representative nations across development tiers. Built with `gt` and `gtExtras`, it embeds inline distribution bars directly into the data matrix, enabling pre-attentive length decoding along an aligned baseline while maintaining analytical precision[cite: 4, 10].
+
+```{r}
+#| label: chart-2-gt-table
+#| code-summary: "Render Chart 2: gt + gtExtras Formatted Data Table"
+
+df_table <- df_chart2_raw %>%
+  arrange(desc(hpi)) %>%
+  mutate(
+    footprint_bar = (footprint / max(footprint)) * 100,
+    hpi_bar = hpi
+  ) %>%
+  select(
+    country, continent, hpi, hpi_bar,
+    life_exp, wellbeing, footprint, footprint_bar, gdp_pc
+  )
+
+tbl_hpi <- df_table %>%
+  gt() %>%
+  tab_header(
+    title = md("**High National Income Fails to Guarantee Ecological Efficiency Across Global Economies**"),
+    subtitle = "Benchmarking 25 representative economies across life expectancy, ladder-of-life wellbeing, and ecological footprint"
+  ) %>%
+  cols_label(
+    country = "Country",
+    continent = "Continent",
+    hpi = "HPI Score",
+    hpi_bar = "Efficiency Bar",
+    life_exp = "Life Expectancy (Years)",
+    wellbeing = "Wellbeing (0–10)",
+    footprint = "Footprint (gha/capita)",
+    footprint_bar = "Pressure Bar",
+    gdp_pc = "GDP per Capita (USD)"
+  ) %>%
+  cols_width(
+    country ~ px(130),
+    continent ~ px(95),
+    hpi ~ px(70),
+    hpi_bar ~ px(105),
+    life_exp ~ px(100),
+    wellbeing ~ px(80),
+    footprint ~ px(95),
+    footprint_bar ~ px(105),
+    gdp_pc ~ px(120)
+  ) %>%
+  fmt_number(
+    columns = c(hpi, life_exp, wellbeing),
+    decimals = 1
+  ) %>%
+  fmt_number(
+    columns = c(footprint),
+    decimals = 2
+  ) %>%
+  fmt_currency(
+    columns = c(gdp_pc),
+    currency = "USD",
+    decimals = 0
+  ) %>%
+  gt_plt_bar_pct(
+    column = hpi_bar,
+    scaled = TRUE,
+    fill = "#0072B2",
+    background = "#EAEAEA",
+    height = 14
+  ) %>%
+  gt_plt_bar_pct(
+    column = footprint_bar,
+    scaled = TRUE,
+    fill = "#D55E00",
+    background = "#EAEAEA",
+    height = 14
+  ) %>%
+  gt_badge(
+    column = continent,
+    palette = pal_continent
+  ) %>%
+  cols_align(
+    align = "left",
+    columns = c(country, continent)
+  ) %>%
+  cols_align(
+    align = "center",
+    columns = c(hpi, hpi_bar, footprint, footprint_bar)
+  ) %>%
+  cols_align(
+    align = "right",
+    columns = c(life_exp, wellbeing, gdp_pc)
+  ) %>%
+  tab_options(
+    table.width = px(900),
+    table.font.names = "sans-serif",
+    table.font.size = px(13),
+    heading.title.font.size = px(17),
+    heading.title.font.weight = "bold",
+    heading.subtitle.font.size = px(13),
+    heading.align = "left",
+    column_labels.font.size = px(12),
+    column_labels.font.weight = "bold",
+    column_labels.background.color = "#F4F6F9",
+    row.striping.include_table_body = TRUE,
+    row.striping.background_color = "#FAFAFA",
+    table.border.top.style = "solid",
+    table.border.top.color = "#333333",
+    table.border.top.width = px(2),
+    table.border.bottom.style = "solid",
+    table.border.bottom.color = "#333333",
+    table.border.bottom.width = px(2),
+    data_row.padding = px(5)
+  ) %>%
+  tab_source_note(
+    source_note = md("Source: Happy Planet Index 2024; World Bank Development Indicators. Table compiled for EPPS 6356 Chart Hackathon.")
+  )
+
+tbl_hpi
+```
+
+### Analytical Takeaway
+* **The Decoupling Paradox:** Economies with high GDP per capita (e.g., Luxembourg at \$116,300 and the United States at \$63,500) exhibit disproportionate ecological footprints (12.80 and 7.80 gha/capita), pulling their overall HPI scores below 45[cite: 4, 10]. Middle-income economies like Costa Rica (HPI 62.1) deliver comparable life expectancy with less than one-third of the ecological throughput[cite: 4, 10].
+
+---
+
+## Chart 3: Horizontal Bar Chart of Ranked Cohorts
+
+### Implementation (Comparison: One Variable, Many Items)
+
+Chart 3 benchmarks the Top 20 and Bottom 20 nations. Factor levels are ordered by continuous HPI score using `forcats::fct_reorder()`, eliminating alphabetical friction[cite: 4, 11]. The visual encoding uses an accessible, non-green Okabe-Ito color scheme (Okabe-Ito Blue `#0072B2` vs. Vermilion `#D55E00`)[cite: 11].
+
+```{r}
+#| label: chart-3-bar-chart
+#| code-summary: "Render Chart 3: geom_col() + fct_reorder() Horizontal Ranked Bars"
+#| fig-width: 11.5
+#| fig-height: 7.8
+
+df_chart3 <- df_chart3_raw %>%
+  mutate(
+    country_ordered = fct_reorder(country, hpi),
+    group = factor(group, levels = c("Top 20", "Bottom 20"))
+  )
+
+p3 <- ggplot(df_chart3, aes(x = hpi, y = country_ordered, fill = group)) +
+  geom_col(
+    width = 0.72,
+    show.legend = FALSE
+  ) +
+  geom_text(
+    aes(label = sprintf("%.1f", hpi)),
+    hjust = -0.20,
+    size = 3.1,
+    fontface = "bold",
+    color = "#222222"
+  ) +
+  facet_wrap(
+    ~ group,
+    scales = "free_y",
+    ncol = 2
+  ) +
+  scale_fill_manual(
+    values = c(
+      "Top 20"    = "#0072B2",  # Okabe-Ito Blue
+      "Bottom 20" = "#D55E00"   # Okabe-Ito Vermilion
+    )
+  ) +
+  scale_x_continuous(
+    name = "Happy Planet Index Score (0–100 Scale)",
+    limits = c(0, 74),
+    breaks = seq(0, 70, by = 10),
+    expand = expansion(mult = c(0, 0.02))
+  ) +
+  scale_y_discrete(name = "Country") +
+  labs(
+    title = "Latin American Nations Lead Sustainable Efficiency While Fossil Rentiers and Fragile States Lag",
+    subtitle = "Comparing the 20 highest- and 20 lowest-ranked global economies on the 2024 Happy Planet Index.",
+    caption = "Source: Happy Planet Index (2024 Edition) | EPPS 6356 Hackathon"
+  ) +
+  theme_hackathon(legend_pos = "none") +
+  theme(
+    axis.text.y = element_text(size = rel(0.78), color = "#222222"),
+    panel.spacing = unit(1.5, "lines"),
+    strip.text = element_text(size = rel(0.95), face = "bold")
+  )
+
+p3
+```
+
+### Analytical Takeaway
+* **Structural Distribution Divergence:** The Top 20 cohort is dominated by Latin American nations and high-efficiency island nations (e.g., Vanuatu)[cite: 4, 11]. The Bottom 20 features carbon-intensive fossil fuel exporters (e.g., Qatar, UAE, Mongolia) alongside developing economies with severe health infrastructure constraints (e.g., Central African Republic), highlighting two distinct drivers of low sustainable efficiency[cite: 4, 11].
+
+---
+
+## Computational Environment and Session Info
+
+```{r}
+#| label: session-info
+#| code-summary: "Display sessionInfo() for Reproducibility"
+
+sessionInfo()
+```
