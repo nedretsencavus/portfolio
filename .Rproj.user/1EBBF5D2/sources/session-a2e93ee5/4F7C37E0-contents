@@ -15,9 +15,9 @@ format:
     fig-height: 6.5
 ---
   
-  ## Executive Overview
+## Executive Overview
   
- ## Project Overview
+## Project Overview
 
 For Assignment 4 in Dr. Karl Ho’s EPPS 6356 Data Visualization course, our objective was to operationalize Andrew Abela’s *Chart Thought-Starter* taxonomy using empirical data from the 2024 Happy Planet Index (HPI). The assignment required building a fully reproducible, self-contained repository in R, deploying the resulting figures to GitHub Pages, and demonstrating clear collaborative ownership.
 
@@ -89,9 +89,9 @@ df_chart3_raw <- readRDS("../data/hpi_chart3.rds")
 
 ---
   
-  ## Chart 1: Variable-Width Column Chart
+## Chart 1: Variable-Width Column Chart
   
-  ### Implementation (Comparison: Two Variables per Item)
+### Implementation (Comparison: Two Variables per Item)
   
   Chart 1 maps two continuous macro-demographic dimensions simultaneously using `geom_rect()`: continental population determines rectangle width ($W_i = xmax_i - xmin_i$), while population-weighted Happy Planet Index determines column height ($ymax_i$). Interior polygon text has been eliminated to maximize the data-ink ratio and prevent label clipping across narrower columns (e.g., Oceania).
 

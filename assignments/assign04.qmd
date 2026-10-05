@@ -15,9 +15,9 @@ format:
     fig-height: 6.5
 ---
   
-  ## Executive Overview
+## Executive Overview
   
- ## Project Overview
+## Project Overview
 
 For Assignment 4 in Dr. Karl Ho’s EPPS 6356 Data Visualization course, our objective was to operationalize Andrew Abela’s *Chart Thought-Starter* taxonomy using empirical data from the 2024 Happy Planet Index (HPI). The assignment required building a fully reproducible, self-contained repository in R, deploying the resulting figures to GitHub Pages, and demonstrating clear collaborative ownership.
 

@@ -206,7 +206,11 @@ window.Quarto = {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#analytical-takeaway" id="toc-analytical-takeaway" class="nav-link active" data-scroll-target="#analytical-takeaway">Analytical Takeaway</a></li>
+  <li><a href="#executive-overview" id="toc-executive-overview" class="nav-link active" data-scroll-target="#executive-overview">Executive Overview</a></li>
+  <li><a href="#project-overview" id="toc-project-overview" class="nav-link" data-scroll-target="#project-overview">Project Overview</a>
+  <ul class="collapse">
+  <li><a href="#analytical-takeaway" id="toc-analytical-takeaway" class="nav-link" data-scroll-target="#analytical-takeaway">Analytical Takeaway</a></li>
+  </ul></li>
   <li><a href="#chart-2-table-with-embedded-distribution-bars" id="toc-chart-2-table-with-embedded-distribution-bars" class="nav-link" data-scroll-target="#chart-2-table-with-embedded-distribution-bars">Chart 2: Table with Embedded Distribution Bars</a>
   <ul class="collapse">
   <li><a href="#implementation-comparison-many-categories-across-multiple-indicators" id="toc-implementation-comparison-many-categories-across-multiple-indicators" class="nav-link" data-scroll-target="#implementation-comparison-many-categories-across-multiple-indicators">Implementation (Comparison: Many Categories across Multiple Indicators)</a></li>
@@ -257,8 +261,11 @@ window.Quarto = {
 </header>
 
 
-<p>## Executive Overview</p>
-<p>## Project Overview</p>
+<section id="executive-overview" class="level2">
+<h2 class="anchored" data-anchor-id="executive-overview">Executive Overview</h2>
+</section>
+<section id="project-overview" class="level2">
+<h2 class="anchored" data-anchor-id="project-overview">Project Overview</h2>
 <p>For Assignment 4 in Dr.&nbsp;Karl Ho’s EPPS 6356 Data Visualization course, our objective was to operationalize Andrew Abela’s <em>Chart Thought-Starter</em> taxonomy using empirical data from the 2024 Happy Planet Index (HPI). The assignment required building a fully reproducible, self-contained repository in R, deploying the resulting figures to GitHub Pages, and demonstrating clear collaborative ownership.</p>
 <p>As team coordinator, I designed the foundation for the team before any visualization code was drafted. In line with Dr.&nbsp;Ho’s recommendation to settle design foundations early, I initialized the remote GitHub repository. I then developed, debugged, and refined Charts 1, 2, and 3, and established the branch architecture to delegate Chart 4 to my teammates.</p>
 <p>This report documents the architectural setup, mathematical boundaries, visual design theories, debugging challenges, and substantive findings that went into completing this sprint. All figures share a unified styling system, adhere to Edward Tufte’s data-ink maximization, utilize color-blind safe palettes (Okabe &amp; Ito 2008), and encode comparisons along common spatial baselines (Cleveland &amp; McGill 1984).</p>
@@ -502,6 +509,7 @@ window.Quarto = {
 </ul>
 <hr>
 </section>
+</section>
 <section id="chart-2-table-with-embedded-distribution-bars" class="level2">
 <h2 class="anchored" data-anchor-id="chart-2-table-with-embedded-distribution-bars">Chart 2: Table with Embedded Distribution Bars</h2>
 <section id="implementation-comparison-many-categories-across-multiple-indicators" class="level3">
@@ -620,23 +628,23 @@ window.Quarto = {
 <span id="cb3-108"><a href="#cb3-108" aria-hidden="true" tabindex="-1"></a>tbl_hpi</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
-<div id="tzcppadxzk" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#tzcppadxzk table {
+<div id="qfvjlmplve" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#qfvjlmplve table {
   font-family: sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#tzcppadxzk thead, #tzcppadxzk tbody, #tzcppadxzk tfoot, #tzcppadxzk tr, #tzcppadxzk td, #tzcppadxzk th {
+#qfvjlmplve thead, #qfvjlmplve tbody, #qfvjlmplve tfoot, #qfvjlmplve tr, #qfvjlmplve td, #qfvjlmplve th {
   border-style: none;
 }
 
-#tzcppadxzk p {
+#qfvjlmplve p {
   margin: 0;
   padding: 0;
 }
 
-#tzcppadxzk .gt_table {
+#qfvjlmplve .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -662,12 +670,12 @@ window.Quarto = {
   border-left-color: #D3D3D3;
 }
 
-#tzcppadxzk .gt_caption {
+#qfvjlmplve .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#tzcppadxzk .gt_title {
+#qfvjlmplve .gt_title {
   color: #333333;
   font-size: 17px;
   font-weight: bold;
@@ -679,7 +687,7 @@ window.Quarto = {
   border-bottom-width: 0;
 }
 
-#tzcppadxzk .gt_subtitle {
+#qfvjlmplve .gt_subtitle {
   color: #333333;
   font-size: 13px;
   font-weight: initial;
@@ -691,7 +699,7 @@ window.Quarto = {
   border-top-width: 0;
 }
 
-#tzcppadxzk .gt_heading {
+#qfvjlmplve .gt_heading {
   background-color: #FFFFFF;
   text-align: left;
   border-bottom-color: #FFFFFF;
@@ -703,13 +711,13 @@ window.Quarto = {
   border-right-color: #D3D3D3;
 }
 
-#tzcppadxzk .gt_bottom_border {
+#qfvjlmplve .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#tzcppadxzk .gt_col_headings {
+#qfvjlmplve .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -724,7 +732,7 @@ window.Quarto = {
   border-right-color: #D3D3D3;
 }
 
-#tzcppadxzk .gt_col_heading {
+#qfvjlmplve .gt_col_heading {
   color: #333333;
   background-color: #F4F6F9;
   font-size: 12px;
@@ -744,7 +752,7 @@ window.Quarto = {
   overflow-x: hidden;
 }
 
-#tzcppadxzk .gt_column_spanner_outer {
+#qfvjlmplve .gt_column_spanner_outer {
   color: #333333;
   background-color: #F4F6F9;
   font-size: 12px;
@@ -756,15 +764,15 @@ window.Quarto = {
   padding-right: 4px;
 }
 
-#tzcppadxzk .gt_column_spanner_outer:first-child {
+#qfvjlmplve .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#tzcppadxzk .gt_column_spanner_outer:last-child {
+#qfvjlmplve .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#tzcppadxzk .gt_column_spanner {
+#qfvjlmplve .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -776,11 +784,11 @@ window.Quarto = {
   width: 100%;
 }
 
-#tzcppadxzk .gt_spanner_row {
+#qfvjlmplve .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#tzcppadxzk .gt_group_heading {
+#qfvjlmplve .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -806,7 +814,7 @@ window.Quarto = {
   text-align: left;
 }
 
-#tzcppadxzk .gt_empty_group_heading {
+#qfvjlmplve .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -821,15 +829,15 @@ window.Quarto = {
   vertical-align: middle;
 }
 
-#tzcppadxzk .gt_from_md > :first-child {
+#qfvjlmplve .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#tzcppadxzk .gt_from_md > :last-child {
+#qfvjlmplve .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#tzcppadxzk .gt_row {
+#qfvjlmplve .gt_row {
   padding-top: 5px;
   padding-bottom: 5px;
   padding-left: 5px;
@@ -848,7 +856,7 @@ window.Quarto = {
   overflow-x: hidden;
 }
 
-#tzcppadxzk .gt_stub {
+#qfvjlmplve .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -861,7 +869,7 @@ window.Quarto = {
   padding-right: 5px;
 }
 
-#tzcppadxzk .gt_stub_row_group {
+#qfvjlmplve .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -875,15 +883,15 @@ window.Quarto = {
   vertical-align: top;
 }
 
-#tzcppadxzk .gt_row_group_first td {
+#qfvjlmplve .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#tzcppadxzk .gt_row_group_first th {
+#qfvjlmplve .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#tzcppadxzk .gt_summary_row {
+#qfvjlmplve .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -893,16 +901,16 @@ window.Quarto = {
   padding-right: 5px;
 }
 
-#tzcppadxzk .gt_first_summary_row {
+#qfvjlmplve .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#tzcppadxzk .gt_first_summary_row.thick {
+#qfvjlmplve .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#tzcppadxzk .gt_last_summary_row {
+#qfvjlmplve .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -912,7 +920,7 @@ window.Quarto = {
   border-bottom-color: #D3D3D3;
 }
 
-#tzcppadxzk .gt_grand_summary_row {
+#qfvjlmplve .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -922,7 +930,7 @@ window.Quarto = {
   padding-right: 5px;
 }
 
-#tzcppadxzk .gt_first_grand_summary_row {
+#qfvjlmplve .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -932,7 +940,7 @@ window.Quarto = {
   border-top-color: #D3D3D3;
 }
 
-#tzcppadxzk .gt_last_grand_summary_row_top {
+#qfvjlmplve .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -942,11 +950,11 @@ window.Quarto = {
   border-bottom-color: #D3D3D3;
 }
 
-#tzcppadxzk .gt_striped {
+#qfvjlmplve .gt_striped {
   background-color: #FAFAFA;
 }
 
-#tzcppadxzk .gt_table_body {
+#qfvjlmplve .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -955,7 +963,7 @@ window.Quarto = {
   border-bottom-color: #D3D3D3;
 }
 
-#tzcppadxzk .gt_footnotes {
+#qfvjlmplve .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -969,7 +977,7 @@ window.Quarto = {
   border-right-color: #D3D3D3;
 }
 
-#tzcppadxzk .gt_footnote {
+#qfvjlmplve .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -978,7 +986,7 @@ window.Quarto = {
   padding-right: 5px;
 }
 
-#tzcppadxzk .gt_sourcenotes {
+#qfvjlmplve .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -992,7 +1000,7 @@ window.Quarto = {
   border-right-color: #D3D3D3;
 }
 
-#tzcppadxzk .gt_sourcenote {
+#qfvjlmplve .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1000,72 +1008,72 @@ window.Quarto = {
   padding-right: 5px;
 }
 
-#tzcppadxzk .gt_left {
+#qfvjlmplve .gt_left {
   text-align: left;
 }
 
-#tzcppadxzk .gt_center {
+#qfvjlmplve .gt_center {
   text-align: center;
 }
 
-#tzcppadxzk .gt_right {
+#qfvjlmplve .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#tzcppadxzk .gt_font_normal {
+#qfvjlmplve .gt_font_normal {
   font-weight: normal;
 }
 
-#tzcppadxzk .gt_font_bold {
+#qfvjlmplve .gt_font_bold {
   font-weight: bold;
 }
 
-#tzcppadxzk .gt_font_italic {
+#qfvjlmplve .gt_font_italic {
   font-style: italic;
 }
 
-#tzcppadxzk .gt_super {
+#qfvjlmplve .gt_super {
   font-size: 65%;
 }
 
-#tzcppadxzk .gt_footnote_marks {
+#qfvjlmplve .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#tzcppadxzk .gt_asterisk {
+#qfvjlmplve .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#tzcppadxzk .gt_indent_1 {
+#qfvjlmplve .gt_indent_1 {
   text-indent: 5px;
 }
 
-#tzcppadxzk .gt_indent_2 {
+#qfvjlmplve .gt_indent_2 {
   text-indent: 10px;
 }
 
-#tzcppadxzk .gt_indent_3 {
+#qfvjlmplve .gt_indent_3 {
   text-indent: 15px;
 }
 
-#tzcppadxzk .gt_indent_4 {
+#qfvjlmplve .gt_indent_4 {
   text-indent: 20px;
 }
 
-#tzcppadxzk .gt_indent_5 {
+#qfvjlmplve .gt_indent_5 {
   text-indent: 25px;
 }
 
-#tzcppadxzk .katex-display {
+#qfvjlmplve .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#tzcppadxzk div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#qfvjlmplve div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -2251,9 +2259,9 @@ loaded via a namespace (and not attached):
 <span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a><span class="co">    fig-height: 6.5</span></span>
 <span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
 <span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>  ## Executive Overview</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a><span class="fu">## Executive Overview</span></span>
 <span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a> ## Project Overview</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a><span class="fu">## Project Overview</span></span>
 <span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>For Assignment 4 in Dr. Karl Ho’s EPPS 6356 Data Visualization course, our objective was to operationalize Andrew Abela’s *Chart Thought-Starter* taxonomy using empirical data from the 2024 Happy Planet Index (HPI). The assignment required building a fully reproducible, self-contained repository in R, deploying the resulting figures to GitHub Pages, and demonstrating clear collaborative ownership.</span>
 <span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a></span>
