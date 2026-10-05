@@ -10,3 +10,4 @@
 
 .DS_store
 Thumbs.nd
+**/*.quarto_ipynb
