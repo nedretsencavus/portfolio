@@ -4,4 +4,4 @@ title: "Nedret Sen Cavus Portfolio"
 
 # Welcome
 
-This is my personal website for the course EPPS 6302 Methods of Data Collection and Production. Use the navigation bar to access **About**, **Assignments**, and my **Resume/CV**.
+This is my personal website for the course EPPS 6356 Data Visualization. Use the navigation bar to access **About me**, **Assignments**, and my **Resume/CV**.

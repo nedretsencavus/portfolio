@@ -3,7 +3,7 @@
     "path": "C:/Users/nedre/OneDrive/Desktop/R Projects/DataVisualizationFall2026/portfolio/assignments/assign04.qmd",
     "project_path": "assignments/assign04.qmd",
     "type": "quarto_markdown",
-    "hash": "3849778257",
+    "hash": "667092462",
     "contents": "",
     "dirty": false,
     "created": 1791183154526.0,
@@ -12,16 +12,16 @@
     "properties": {
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "3,75",
-        "scrollLine": "0",
+        "cursorPosition": "391,0",
+        "scrollLine": "386",
         "last_setup_crc32": ""
     },
     "folds": "",
-    "lastKnownWriteTime": 1791187234,
+    "lastKnownWriteTime": 1791190799,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1791187234759,
+    "last_content_update": 1791190799691,
     "read_only": false,
     "read_only_alternatives": []
 }
