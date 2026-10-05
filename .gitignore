@@ -1,0 +1,11 @@
+/.quarto/
+*_cache
+*_files/
+
+.Rhistory
+.RData
+.Ruserdata
+.Rproj.user/
+
+.DS_store
+Thumbs.nd

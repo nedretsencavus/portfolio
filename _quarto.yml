@@ -1,0 +1,27 @@
+project:
+  type: website
+  output-dir: docs
+
+website:
+  title: "Nedret Sen Cavus"
+  navbar:
+    left:
+      - href: index.qmd
+        text: Home
+      - href: about.qmd
+        text: About
+      - text: Assignments
+        menu:
+          - href: assignments/assign04.qmd
+            text: Assignment 4
+    right:
+      - href: resume/NedretSenCavus_Resume.pdf
+        text: Resume/CV
+format:
+  html:
+    theme: cosmo
+    css: styles.css
+    toc: true
+
+editor: visual
+
