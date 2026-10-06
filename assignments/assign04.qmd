@@ -14,9 +14,7 @@ format:
     fig-width: 10.5
     fig-height: 6.5
 ---
-  
-## Executive Overview
-  
+
 ## Project Overview
 
 For Assignment 4 in Dr. Karl Ho’s EPPS 6356 Data Visualization course, our objective was to operationalize Andrew Abela’s *Chart Thought-Starter* taxonomy using empirical data from the 2024 Happy Planet Index (HPI). The assignment required building a fully reproducible, self-contained repository in R, deploying the resulting figures to GitHub Pages, and demonstrating clear collaborative ownership.
@@ -25,7 +23,7 @@ As team coordinator, I designed the foundation for the team before any visualiza
 
 This report documents the architectural setup, mathematical boundaries, visual design theories, debugging challenges, and substantive findings that went into completing this sprint. All figures share a unified styling system, adhere to Edward Tufte's data-ink maximization, utilize color-blind safe palettes (Okabe & Ito 2008), and encode comparisons along common spatial baselines (Cleveland & McGill 1984).
 
- ## Visualization Engineering & Iteration
+\## Visualization Engineering & Iteration
 
 ```{r}
 #| label: setup
@@ -87,13 +85,13 @@ df_chart2_raw <- readRDS("../data/hpi_chart2.rds")
 df_chart3_raw <- readRDS("../data/hpi_chart3.rds")
 ```
 
----
-  
-  ## Chart 1: Variable-Width Column Chart
-  
-  ### Implementation (Comparison: Two Variables per Item)
-  
-  Chart 1 maps two continuous macro-demographic dimensions simultaneously using `geom_rect()`: continental population determines rectangle width ($W_i = xmax_i - xmin_i$), while population-weighted Happy Planet Index determines column height ($ymax_i$). Interior polygon text has been eliminated to maximize the data-ink ratio and prevent label clipping across narrower columns (e.g., Oceania).
+------------------------------------------------------------------------
+
+\## Chart 1: Variable-Width Column Chart
+
+\### Implementation (Comparison: Two Variables per Item)
+
+Chart 1 maps two continuous macro-demographic dimensions simultaneously using `geom_rect()`: continental population determines rectangle width ($W_i = xmax_i - xmin_i$), while population-weighted Happy Planet Index determines column height ($ymax_i$). Interior polygon text has been eliminated to maximize the data-ink ratio and prevent label clipping across narrower columns (e.g., Oceania).
 
 ```{r}
 #| label: chart-1-variable-width
@@ -260,10 +258,11 @@ p1
 ```
 
 ### Analytical Takeaway
-* **The Population Weighting Effect:** Looking strictly at national averages, Latin American nations post the highest individual HPI scores globally. However, when weighting by population, **Europe leads all continents with a score of 49.4** across roughly 750 million people. The Americas place second at **46.7**; while countries like Costa Rica (62.1) and Colombia (60.2) demonstrate world-class efficiency, the region's aggregate score is pulled down by the demographic mass and heavy ecological footprint of the United States (37.4 across 333 million people).
-* **Demographic Mass vs. Sustainable Return:** Asia spans the largest horizontal share of the chart—representing nearly 4 billion people in this sample—yet achieves an intermediate efficiency score of **44.9**. Oceania maintains a solid **46.0**, though its demographic footprint is a narrow sliver on the far right (roughly 32 million people). Africa records the lowest regional weighted score at **36.6** across roughly 880 million people, constrained primarily by systemic deficits in life expectancy and basic public health infrastructure rather than resource overconsumption.
 
----
+- **The Population Weighting Effect:** Looking strictly at national averages, Latin American nations post the highest individual HPI scores globally. However, when weighting by population, **Europe leads all continents with a score of 49.4** across roughly 750 million people. The Americas place second at **46.7**; while countries like Costa Rica (62.1) and Colombia (60.2) demonstrate world-class efficiency, the region's aggregate score is pulled down by the demographic mass and heavy ecological footprint of the United States (37.4 across 333 million people).
+- **Demographic Mass vs. Sustainable Return:** Asia spans the largest horizontal share of the chart—representing nearly 4 billion people in this sample—yet achieves an intermediate efficiency score of **44.9**. Oceania maintains a solid **46.0**, though its demographic footprint is a narrow sliver on the far right (roughly 32 million people). Africa records the lowest regional weighted score at **36.6** across roughly 880 million people, constrained primarily by systemic deficits in life expectancy and basic public health infrastructure rather than resource overconsumption.
+
+------------------------------------------------------------------------
 
 ## Chart 2: Table with Embedded Distribution Bars
 
@@ -386,11 +385,12 @@ tbl_hpi
 ```
 
 ### Analytical Takeaway
-* **The Income–Footprint Decoupling:** The inline pressure bars visually expose that high national wealth does not translate into sustainable efficiency. High-income economies like Luxembourg ($116,300 GDP pc) and Qatar ($93,500 GDP pc) achieve high life expectancy (82.6 and 79.3 years), but generate massive ecological footprints (12.80 and 14.30 gha/capita). These resource demands stretch their pressure bars to the maximum and drag their overall HPI scores down to **33.5** and **22.6**.
-* **High Efficiency at Low Cost:** Middle- and low-income economies achieve comparable health and happiness outcomes at a fraction of the ecological throughput. Costa Rica ($20,300 GDP pc) and Vanuatu ($3,150 GDP pc) deliver life expectancies of 80.3 and 70.5 years with subjective wellbeing at 7.0/10, all while keeping footprints under 2.7 gha/capita. Their efficiency bars fill nearly two-thirds of the cell, demonstrating that human development does not require exponential carbon consumption.
-* **Two Routes to Low Scores:** The bottom rows highlight two distinct failure mechanisms. In the United States (HPI 37.4) and Qatar (HPI 22.6), low efficiency stems from excessive consumption (footprints of 7.80 and 14.30 gha). In the Central African Republic (HPI 21.1), the low score is driven by acute humanitarian hardship—life expectancy drops to 53.9 years and wellbeing falls to 3.5, even though its footprint is minimal at 1.45 gha/capita.
 
----
+- **The Income–Footprint Decoupling:** The inline pressure bars visually expose that high national wealth does not translate into sustainable efficiency. High-income economies like Luxembourg (\$116,300 GDP pc) and Qatar (\$93,500 GDP pc) achieve high life expectancy (82.6 and 79.3 years), but generate massive ecological footprints (12.80 and 14.30 gha/capita). These resource demands stretch their pressure bars to the maximum and drag their overall HPI scores down to **33.5** and **22.6**.
+- **High Efficiency at Low Cost:** Middle- and low-income economies achieve comparable health and happiness outcomes at a fraction of the ecological throughput. Costa Rica (\$20,300 GDP pc) and Vanuatu (\$3,150 GDP pc) deliver life expectancies of 80.3 and 70.5 years with subjective wellbeing at 7.0/10, all while keeping footprints under 2.7 gha/capita. Their efficiency bars fill nearly two-thirds of the cell, demonstrating that human development does not require exponential carbon consumption.
+- **Two Routes to Low Scores:** The bottom rows highlight two distinct failure mechanisms. In the United States (HPI 37.4) and Qatar (HPI 22.6), low efficiency stems from excessive consumption (footprints of 7.80 and 14.30 gha). In the Central African Republic (HPI 21.1), the low score is driven by acute humanitarian hardship—life expectancy drops to 53.9 years and wellbeing falls to 3.5, even though its footprint is minimal at 1.45 gha/capita.
+
+------------------------------------------------------------------------
 
 ## Chart 3: Horizontal Bar Chart of Ranked Cohorts
 
@@ -456,24 +456,25 @@ p3
 ```
 
 ### Analytical Takeaway
-* **Regional Clustering in the Top 20:** Ten of the twenty highest-ranked nations are located in Latin America and the Caribbean, led by Costa Rica (**62.1**), Colombia (**60.2**), Ecuador (**58.8**), Panama (**57.9**), and Jamaica (**57.9**). High-performing European economies (Switzerland at 60.1, Norway at 52.2, Finland at 52.0) and Asian economies (Philippines at 53.2, Vietnam at 52.7, Japan at 51.8) also break into the top tier by balancing long lifespans with managed resource use.
-* **Bimodal Drivers in the Bottom 20:** Splitting the cohorts reveals two distinct structural drivers pulling nations into the lower tier:
-  1. *Resource-intensive fossil economies and high-consumption states:* Qatar (**22.6**), United Arab Emirates (**31.8**), Luxembourg (**33.5**), Saudi Arabia (**35.4**), and the United States (**37.4**) land in the bottom cohort because their heavy ecological footprints penalize otherwise strong health and income metrics.
-  2. *Low-income and conflict-affected states:* Central African Republic (**21.1**), Zimbabwe (**24.2**), Sierra Leone (**27.3**), and South Africa (**29.5**) sit at the very bottom due to low life expectancy and lower reported wellbeing, despite having low per-capita environmental impacts.
-* **Perceptual Separation Along an Aligned Baseline:** Sorting categories strictly by score rather than alphabetically places the top performer (Costa Rica at 62.1) and lowest performer (Central African Republic at 21.1) along a single, continuous horizontal scale, making the 41-point spread immediately readable without visual scanning.
 
----
+- **Regional Clustering in the Top 20:** Ten of the twenty highest-ranked nations are located in Latin America and the Caribbean, led by Costa Rica (**62.1**), Colombia (**60.2**), Ecuador (**58.8**), Panama (**57.9**), and Jamaica (**57.9**). High-performing European economies (Switzerland at 60.1, Norway at 52.2, Finland at 52.0) and Asian economies (Philippines at 53.2, Vietnam at 52.7, Japan at 51.8) also break into the top tier by balancing long lifespans with managed resource use.
+- **Bimodal Drivers in the Bottom 20:** Splitting the cohorts reveals two distinct structural drivers pulling nations into the lower tier:
+  1.  *Resource-intensive fossil economies and high-consumption states:* Qatar (**22.6**), United Arab Emirates (**31.8**), Luxembourg (**33.5**), Saudi Arabia (**35.4**), and the United States (**37.4**) land in the bottom cohort because their heavy ecological footprints penalize otherwise strong health and income metrics.
+  2.  *Low-income and conflict-affected states:* Central African Republic (**21.1**), Zimbabwe (**24.2**), Sierra Leone (**27.3**), and South Africa (**29.5**) sit at the very bottom due to low life expectancy and lower reported wellbeing, despite having low per-capita environmental impacts.
+- **Perceptual Separation Along an Aligned Baseline:** Sorting categories strictly by score rather than alphabetically places the top performer (Costa Rica at 62.1) and lowest performer (Central African Republic at 21.1) along a single, continuous horizontal scale, making the 41-point spread immediately readable without visual scanning.
+
+------------------------------------------------------------------------
 
 ## Technical Troubleshooting & Debugging Log
 
 During development, several technical issues required hands-on troubleshooting to keep the project moving:
 
-* **Package Installation & System Permissions:** Running `install.packages("dplyr", "tidyr", ...)` initially threw directory errors because missing `c()` wrappers caused R to misinterpret package names as local paths and download repositories. In addition, Windows compilation prompts for Rtools appeared. I resolved this by setting `options(pkgType = "binary")` to pull pre-compiled binaries, avoiding unnecessary local compiler builds.
-* **Quarto Path Resolution:** Early preview runs failed with `cannot open the connection` on `source("R/theme.R")` because the file was saved in an external folder. I wrote an inline script generator to save `R/theme.R` directly into the project root, satisfying the self-contained repository requirement.
-* **YAML Parser Crashes:** Quarto threw `readBlockMapping2` errors due to a merged title/subtitle line and non-breaking space characters (`\u00A0`) in the YAML header. I rebuilt the front matter with standard two-space indentation and dedicated lines for every key.
-* **Table Cell Clipping:** The gt table's right-aligned currency columns were getting clipped during headless rendering in Chrome. Setting fixed pixel widths on every column via `cols_width()` resolved the overflow.
+- **Package Installation & System Permissions:** Running `install.packages("dplyr", "tidyr", ...)` initially threw directory errors because missing `c()` wrappers caused R to misinterpret package names as local paths and download repositories. In addition, Windows compilation prompts for Rtools appeared. I resolved this by setting `options(pkgType = "binary")` to pull pre-compiled binaries, avoiding unnecessary local compiler builds.
+- **Quarto Path Resolution:** Early preview runs failed with `cannot open the connection` on `source("R/theme.R")` because the file was saved in an external folder. I wrote an inline script generator to save `R/theme.R` directly into the project root, satisfying the self-contained repository requirement.
+- **YAML Parser Crashes:** Quarto threw `readBlockMapping2` errors due to a merged title/subtitle line and non-breaking space characters (`\u00A0`) in the YAML header. I rebuilt the front matter with standard two-space indentation and dedicated lines for every key.
+- **Table Cell Clipping:** The gt table's right-aligned currency columns were getting clipped during headless rendering in Chrome. Setting fixed pixel widths on every column via `cols_width()` resolved the overflow.
 
-For all these errors I asked Gemini- Flash Extended model. I gave my code and the warning error I got in the console to Gemini and asked why it happpened, and how I could fix it. 
+For all these errors I asked Gemini- Flash Extended model. I gave my code and the warning error I got in the console to Gemini and asked why it happpened, and how I could fix it.
 
 ## Computational Environment and Session Info
 
