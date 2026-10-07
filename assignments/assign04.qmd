@@ -259,8 +259,8 @@ p1
 
 ### Analytical Takeaway
 
-- **The Population Weighting Effect:** Looking strictly at national averages, Latin American nations post the highest individual HPI scores globally. However, when weighting by population, **Europe leads all continents with a score of 49.4** across roughly 750 million people. The Americas place second at **46.7**; while countries like Costa Rica (62.1) and Colombia (60.2) demonstrate world-class efficiency, the region's aggregate score is pulled down by the demographic mass and heavy ecological footprint of the United States (37.4 across 333 million people).
-- **Demographic Mass vs. Sustainable Return:** Asia spans the largest horizontal share of the chart—representing nearly 4 billion people in this sample—yet achieves an intermediate efficiency score of **44.9**. Oceania maintains a solid **46.0**, though its demographic footprint is a narrow sliver on the far right (roughly 32 million people). Africa records the lowest regional weighted score at **36.6** across roughly 880 million people, constrained primarily by systemic deficits in life expectancy and basic public health infrastructure rather than resource overconsumption.
+-   **The Population Weighting Effect:** Looking strictly at national averages, Latin American nations post the highest individual HPI scores globally. However, when weighting by population, **Europe leads all continents with a score of 49.4** across roughly 750 million people. The Americas place second at **46.7**; while countries like Costa Rica (62.1) and Colombia (60.2) demonstrate world-class efficiency, the region's aggregate score is pulled down by the demographic mass and heavy ecological footprint of the United States (37.4 across 333 million people).
+-   **Demographic Mass vs. Sustainable Return:** Asia spans the largest horizontal share of the chart—representing nearly 4 billion people in this sample—yet achieves an intermediate efficiency score of **44.9**. Oceania maintains a solid **46.0**, though its demographic footprint is a narrow sliver on the far right (roughly 32 million people). Africa records the lowest regional weighted score at **36.6** across roughly 880 million people, constrained primarily by systemic deficits in life expectancy and basic public health infrastructure rather than resource overconsumption.
 
 ------------------------------------------------------------------------
 
@@ -386,9 +386,9 @@ tbl_hpi
 
 ### Analytical Takeaway
 
-- **The Income–Footprint Decoupling:** The inline pressure bars visually expose that high national wealth does not translate into sustainable efficiency. High-income economies like Luxembourg (\$116,300 GDP pc) and Qatar (\$93,500 GDP pc) achieve high life expectancy (82.6 and 79.3 years), but generate massive ecological footprints (12.80 and 14.30 gha/capita). These resource demands stretch their pressure bars to the maximum and drag their overall HPI scores down to **33.5** and **22.6**.
-- **High Efficiency at Low Cost:** Middle- and low-income economies achieve comparable health and happiness outcomes at a fraction of the ecological throughput. Costa Rica (\$20,300 GDP pc) and Vanuatu (\$3,150 GDP pc) deliver life expectancies of 80.3 and 70.5 years with subjective wellbeing at 7.0/10, all while keeping footprints under 2.7 gha/capita. Their efficiency bars fill nearly two-thirds of the cell, demonstrating that human development does not require exponential carbon consumption.
-- **Two Routes to Low Scores:** The bottom rows highlight two distinct failure mechanisms. In the United States (HPI 37.4) and Qatar (HPI 22.6), low efficiency stems from excessive consumption (footprints of 7.80 and 14.30 gha). In the Central African Republic (HPI 21.1), the low score is driven by acute humanitarian hardship—life expectancy drops to 53.9 years and wellbeing falls to 3.5, even though its footprint is minimal at 1.45 gha/capita.
+-   **The Income–Footprint Decoupling:** The inline pressure bars visually expose that high national wealth does not translate into sustainable efficiency. High-income economies like Luxembourg (\$116,300 GDP pc) and Qatar (\$93,500 GDP pc) achieve high life expectancy (82.6 and 79.3 years), but generate massive ecological footprints (12.80 and 14.30 gha/capita). These resource demands stretch their pressure bars to the maximum and drag their overall HPI scores down to **33.5** and **22.6**.
+-   **High Efficiency at Low Cost:** Middle- and low-income economies achieve comparable health and happiness outcomes at a fraction of the ecological throughput. Costa Rica (\$20,300 GDP pc) and Vanuatu (\$3,150 GDP pc) deliver life expectancies of 80.3 and 70.5 years with subjective wellbeing at 7.0/10, all while keeping footprints under 2.7 gha/capita. Their efficiency bars fill nearly two-thirds of the cell, demonstrating that human development does not require exponential carbon consumption.
+-   **Two Routes to Low Scores:** The bottom rows highlight two distinct failure mechanisms. In the United States (HPI 37.4) and Qatar (HPI 22.6), low efficiency stems from excessive consumption (footprints of 7.80 and 14.30 gha). In the Central African Republic (HPI 21.1), the low score is driven by acute humanitarian hardship—life expectancy drops to 53.9 years and wellbeing falls to 3.5, even though its footprint is minimal at 1.45 gha/capita.
 
 ------------------------------------------------------------------------
 
@@ -396,7 +396,7 @@ tbl_hpi
 
 ### Implementation (Comparison: One Variable, Many Items)
 
-Chart 3 benchmarks the Top 20 and Bottom 20 nations. Factor levels are ordered by continuous HPI score using `forcats::fct_reorder()`, eliminating alphabetical friction. The visual encoding uses an accessible, non-green Okabe-Ito color scheme (Okabe-Ito Blue `#0072B2` vs. Vermilion `#D55E00`).
+Chart 3 compares the Top 20 and Bottom 20 HPI countries on one continuous horizontal scale. Countries are ordered by HPI using `forcats::fct_reorder()`, which removes alphabetical ordering and makes the ranking directly visible. Bar length and position encode HPI on a common baseline, while a color-blind-safe green–vermilion palette distinguishes the two cohorts. A separator line marks the boundary between the Top 20 and Bottom 20.
 
 ```{r}
 #| label: chart-3-bar-chart
@@ -404,64 +404,22 @@ Chart 3 benchmarks the Top 20 and Bottom 20 nations. Factor levels are ordered b
 #| fig-width: 11.5
 #| fig-height: 7.8
 
-df_chart3 <- df_chart3_raw %>%
-  mutate(
-    country_ordered = fct_reorder(country, hpi),
-    group = factor(group, levels = c("Top 20", "Bottom 20"))
-  )
+source("Chart3_redesign.R", chdir = TRUE)
 
-p3 <- ggplot(df_chart3, aes(x = hpi, y = country_ordered, fill = group)) +
-  geom_col(
-    width = 0.72,
-    show.legend = FALSE
-  ) +
-  geom_text(
-    aes(label = sprintf("%.1f", hpi)),
-    hjust = -0.20,
-    size = 3.1,
-    fontface = "bold",
-    color = "#222222"
-  ) +
-  facet_wrap(
-    ~ group,
-    scales = "free_y",
-    ncol = 2
-  ) +
-  scale_fill_manual(
-    values = c(
-      "Top 20"    = "#0072B2",  # Okabe-Ito Blue
-      "Bottom 20" = "#D55E00"   # Okabe-Ito Vermilion
-    )
-  ) +
-  scale_x_continuous(
-    name = "Happy Planet Index Score (0–100 Scale)",
-    limits = c(0, 74),
-    breaks = seq(0, 70, by = 10),
-    expand = expansion(mult = c(0, 0.02))
-  ) +
-  scale_y_discrete(name = "Country") +
-  labs(
-    title = "Latin American Nations Lead Sustainable Efficiency While Fossil Rentiers and Fragile States Lag",
-    subtitle = "Comparing the 20 highest- and 20 lowest-ranked global economies on the 2024 Happy Planet Index.",
-    caption = "Source: Happy Planet Index (2024 Edition) | EPPS 6356 Hackathon"
-  ) +
-  theme_hackathon(legend_pos = "none") +
-  theme(
-    axis.text.y = element_text(size = rel(0.78), color = "#222222"),
-    panel.spacing = unit(1.5, "lines"),
-    strip.text = element_text(size = rel(0.95), face = "bold")
-  )
-
-p3
+p3_redesign
 ```
 
-### Analytical Takeaway
+### 
 
-- **Regional Clustering in the Top 20:** Ten of the twenty highest-ranked nations are located in Latin America and the Caribbean, led by Costa Rica (**62.1**), Colombia (**60.2**), Ecuador (**58.8**), Panama (**57.9**), and Jamaica (**57.9**). High-performing European economies (Switzerland at 60.1, Norway at 52.2, Finland at 52.0) and Asian economies (Philippines at 53.2, Vietnam at 52.7, Japan at 51.8) also break into the top tier by balancing long lifespans with managed resource use.
-- **Bimodal Drivers in the Bottom 20:** Splitting the cohorts reveals two distinct structural drivers pulling nations into the lower tier:
-  1.  *Resource-intensive fossil economies and high-consumption states:* Qatar (**22.6**), United Arab Emirates (**31.8**), Luxembourg (**33.5**), Saudi Arabia (**35.4**), and the United States (**37.4**) land in the bottom cohort because their heavy ecological footprints penalize otherwise strong health and income metrics.
-  2.  *Low-income and conflict-affected states:* Central African Republic (**21.1**), Zimbabwe (**24.2**), Sierra Leone (**27.3**), and South Africa (**29.5**) sit at the very bottom due to low life expectancy and lower reported wellbeing, despite having low per-capita environmental impacts.
-- **Perceptual Separation Along an Aligned Baseline:** Sorting categories strictly by score rather than alphabetically places the top performer (Costa Rica at 62.1) and lowest performer (Central African Republic at 21.1) along a single, continuous horizontal scale, making the 41-point spread immediately readable without visual scanning.
+## Analytical Takeaway
+
+-   **Large spread across the ranking:** The continuous ordering reveals a substantial gap between the highest- and lowest-ranked countries. Costa Rica has the highest HPI score at **62.1**, while the Central African Republic has the lowest score at **21.1**, producing a difference of **41.0 points**. Displaying all 40 countries on one common scale makes this overall spread immediately visible and easier to compare than if the two cohorts were shown in separate panels.
+
+-   **Regional concentration among the highest-ranked countries:** Many of the highest HPI scores are concentrated in Latin America and the Caribbean. Costa Rica, Colombia, Ecuador, Panama, Jamaica, Guatemala, Honduras, Nicaragua, Peru, Mexico, and the Dominican Republic all appear in the Top 20. However, the Top 20 is not regionally uniform, as countries such as Switzerland, Norway, Finland, Spain, Japan, Vietnam, and the Philippines also rank highly.
+
+-   **The Bottom 20 is geographically diverse:** The lower end of the ranking includes countries from Africa, Europe, Asia, the Americas, and the Middle East. Examples include Senegal, Ghana, Kenya, Estonia, Bulgaria, Egypt, Uganda, the United States, Tanzania, Saudi Arabia, Ethiopia, Nigeria, Luxembourg, the United Arab Emirates, South Africa, Sierra Leone, Mongolia, Zimbabwe, Qatar, and the Central African Republic. This indicates that low HPI scores are not confined to a single region.
+
+-   **The visualization emphasizes comparison rather than explanation:** Chart 3 shows how countries differ in HPI score, but it does not by itself explain why those differences occur. Variables such as life expectancy, wellbeing, ecological footprint, and GDP per capita are present in the dataset, but they are not encoded in this chart. Therefore, the chart should be interpreted as a ranked comparison of HPI outcomes rather than as evidence of causal relationships.
 
 ------------------------------------------------------------------------
 
@@ -469,10 +427,10 @@ p3
 
 During development, several technical issues required hands-on troubleshooting to keep the project moving:
 
-- **Package Installation & System Permissions:** Running `install.packages("dplyr", "tidyr", ...)` initially threw directory errors because missing `c()` wrappers caused R to misinterpret package names as local paths and download repositories. In addition, Windows compilation prompts for Rtools appeared. I resolved this by setting `options(pkgType = "binary")` to pull pre-compiled binaries, avoiding unnecessary local compiler builds.
-- **Quarto Path Resolution:** Early preview runs failed with `cannot open the connection` on `source("R/theme.R")` because the file was saved in an external folder. I wrote an inline script generator to save `R/theme.R` directly into the project root, satisfying the self-contained repository requirement.
-- **YAML Parser Crashes:** Quarto threw `readBlockMapping2` errors due to a merged title/subtitle line and non-breaking space characters (`\u00A0`) in the YAML header. I rebuilt the front matter with standard two-space indentation and dedicated lines for every key.
-- **Table Cell Clipping:** The gt table's right-aligned currency columns were getting clipped during headless rendering in Chrome. Setting fixed pixel widths on every column via `cols_width()` resolved the overflow.
+-   **Package Installation & System Permissions:** Running `install.packages("dplyr", "tidyr", ...)` initially threw directory errors because missing `c()` wrappers caused R to misinterpret package names as local paths and download repositories. In addition, Windows compilation prompts for Rtools appeared. I resolved this by setting `options(pkgType = "binary")` to pull pre-compiled binaries, avoiding unnecessary local compiler builds.
+-   **Quarto Path Resolution:** Early preview runs failed with `cannot open the connection` on `source("R/theme.R")` because the file was saved in an external folder. I wrote an inline script generator to save `R/theme.R` directly into the project root, satisfying the self-contained repository requirement.
+-   **YAML Parser Crashes:** Quarto threw `readBlockMapping2` errors due to a merged title/subtitle line and non-breaking space characters (`\u00A0`) in the YAML header. I rebuilt the front matter with standard two-space indentation and dedicated lines for every key.
+-   **Table Cell Clipping:** The gt table's right-aligned currency columns were getting clipped during headless rendering in Chrome. Setting fixed pixel widths on every column via `cols_width()` resolved the overflow.
 
 For all these errors I asked Gemini- Flash Extended model. I gave my code and the warning error I got in the console to Gemini and asked why it happpened, and how I could fix it.
 
