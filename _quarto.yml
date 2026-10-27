@@ -14,6 +14,8 @@ website:
         menu:
           - href: assignments/assign04.qmd
             text: Assignment 4
+          - href: assignments/assign07.qmd
+            text: Assignment 7
     right:
       - href: resume/NedretSenCavus_Resume.pdf
         text: Resume/CV

@@ -1,0 +1,62 @@
+---
+title: "Hackathon 2.0: A Reactive Happy Planet Index Explorer"
+subtitle: "EPPS 6356 Data Visualization | Assignment 7"
+author: "Hackathon Team: Nedret Sen-Cavus (coordinator), Shao-Kang (Eric) Huang & Anugraha Samuel Gloria"
+date: "October 23, 2026"
+page-layout: full
+toc: false
+---
+
+## Project Overview
+
+For Assignment 7 our team built a reactive R Shiny application that displays three charts from Andrew Abela's *Chart Suggestions: A Thought-Starter* (2006), using the 2026 Happy Planet Index (HPI) public data set for 2006–2025. The app asks one question: do countries where people live long, satisfied lives also live lightly on the planet, and does wealth help?
+
+All three charts read from a single `reactive()` data set, so a change to the year or the regions updates every chart at once. Drag a box on the scatter chart to highlight those countries in the bubble chart and rank them in the bar chart, hover over a bubble for exact values, or press play under the year slider to animate 2006–2025.
+
+```{=html}
+<iframe
+  src="https://01a16b64-521e-cc41-bb42-bf74300c9d4d.share.connect.posit.cloud"
+  title="Happy Planet Index explorer: scatter, bubble and bar charts, 2006 to 2025"
+  width="100%" height="1350"
+  style="border: 1px solid #d0d4d8; border-radius: 8px;"
+  loading="lazy"></iframe>
+```
+
+If the app does not load above, [open it in a new tab](https://01a16b64-521e-cc41-bb42-bf74300c9d4d.share.connect.posit.cloud). An idle app can take a little while to start.
+
+## The Three Charts
+
+| Abela no. | Chart | What it shows | Why this encoding |
+|---|---|---|---|
+| 9 | Scatter chart | Any two of five variables (GDP per capita, wellbeing, life expectancy, ecological footprint, HPI score), coloured by World Bank region | Both quantities are encoded as position along a common scale, the most accurately judged elementary task (Cleveland & McGill 1984); it is the hypothesis-forming view (Ware 2012) |
+| 18 | Bubble chart | GDP per capita (log scale) against HPI score; bubble area shows population or ecological footprint | Area is the least accurate channel, so it carries only the contextual third variable; area, not radius, is proportional to the value (Tufte 2001; Cairo 2019) |
+| 3 | Bar chart (our choice) | Countries ranked by HPI score, with the world median as a reference line | The HPI is one value per country across more than 130 countries, Abela's case of comparison among many items; bars start at zero so differences are not exaggerated (Cairo 2019) |
+
+The charts are linked views: countries brushed on Chart 9 stay coloured on Chart 18 while the rest fade, and Chart 3 ranks exactly that selection. Every chart has a message title computed from the data, axis titles with units, a source note, and the colour-blind-safe Okabe–Ito palette.
+
+## Data
+
+- Hot or Cool Institute. 2026. *Happy Planet Index 2026: 2006–2025 Public Data Set*. <https://happyplanetindex.org/>
+- World Bank. 2026. *World Development Indicators*: GDP per capita, PPP (constant 2021 international $); population; regions.
+
+The cleaned file covers 154 countries (134 in 2025). The 2026 edition measures the footprint as the ecological footprint in global hectares, so it should not be mixed with earlier editions. The HPI team excluded countries in years of peak armed conflict, and Venezuela, Yemen, Lebanon and the United Arab Emirates lack some World Bank GDP years, so they drop out of the GDP-based views in those years.
+
+## Team and Workflow
+
+| Member | Role | Main contribution |
+|---|---|---|
+| Nedret Sen-Cavus | Coordinator | Repository setup, shared theme, integration and testing, website page, slides, synergy report, submission |
+| Shao-Kang (Eric) Huang | Data and Charts 9 and 18 | Data cleaning and World Bank join; scatter and bubble charts |
+| Anugraha Samuel Gloria | App and Chart 3 | Shiny layout and reactivity; bar chart; deployment to Posit Connect Cloud |
+
+Each member owned separate files and contributed through their own branch and pull requests, so the commit history records who did what. Our synergy report is `SYNERGY.md` in the repository.
+
+## Links
+
+- **Live app:** [Posit Connect Cloud](https://01a16b64-521e-cc41-bb42-bf74300c9d4d.share.connect.posit.cloud)
+- **Code:** [GitHub repository](https://github.com/nedretsencavus/hpi-hackathon)
+- **Slides:** [Google Slides](https://docs.google.com/presentation/d/1CvYUAueJdN1GSOB2Jl6UgOmYNvSI3lbFsMk8grRGrX8/edit?usp=sharing)
+
+## Generative AI Disclosure
+
+We used Claude (Anthropic) to draft the team plan and starter code, which team members then ran, checked and adapted. The full disclosure required by the course AI policy, including the transcripts, is in `AI_DISCLOSURE.md` in the [repository](https://github.com/nedretsencavus/hpi-hackathon).
