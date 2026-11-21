@@ -8,13 +8,13 @@ author: "Nedret Sen Cavus"
 
 - **Static maps (Part B):** [maps.qmd as published](../maps.qmd)
 - **Spatial plan (Part A):** [PLAN.md](../PLAN.md)
-- **Deployed dashboard (Part C):** <https://connect.posit.cloud/nedretsencavus/content/01a1fd57-675d-0c91-9323-380e33217954>
+- **Deployed dashboard (Part C):** <https://01a1fd57-675d-0c91-9323-380e33217954.share.connect.posit.cloud/>
 - **Code repository:** <https://github.com/nedretsencavus/portfolio>
 
 ## Reactive map (embedded)
 
 ```{=html}
-<iframe src="https://connect.posit.cloud/nedretsencavus/content/01a1fd57-675d-0c91-9323-380e33217954"
+<iframe src="https://01a1fd57-675d-0c91-9323-380e33217954.share.connect.posit.cloud/"
         title="Interactive map of discretionary school discipline rates in Texas school districts"
         width="100%" height="900" style="border:0;" loading="lazy"></iframe>
 ```
