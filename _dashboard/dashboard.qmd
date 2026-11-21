@@ -1,0 +1,196 @@
+---
+title: "Unequal Discipline in Texas Public Schools"
+author: "Nedret Sen Cavus"
+format:
+  dashboard:
+    theme: cosmo
+    axe: true
+server: shiny
+---
+
+```{r}
+#| context: setup
+library(tidyverse); library(sf); library(leaflet); library(bslib); library(bsicons)
+
+# ---- Read and join ONCE, outside the server ---------------------------------
+files <- c(disc  = "data/tea_discipline_district.csv",
+           xwalk = "data/ccd_crosswalk_tx.csv",
+           bnd   = "data/tx_school_districts.rds")
+if (any(!file.exists(files))) {
+  stop("Missing data files: ", paste(files[!file.exists(files)], collapse = ", "),
+       ". Run R/prepare_map_data.R from the website folder first.")
+}
+
+disc <- read_csv(files[["disc"]], show_col_types = FALSE,
+                 col_types = cols(year = col_character(), cdn = col_character(),
+                                  district_name = col_character(),
+                                  charter_status = col_character(), .default = col_double()))
+xwalk <- read_csv(files[["xwalk"]], col_types = cols(.default = col_character()))
+districts <- readRDS(files[["bnd"]]) |>
+  st_transform(4326) |>                       # Leaflet takes EPSG:4326 and draws in Web Mercator
+  mutate(label_name = district_boundary_name |>
+           str_replace("Consolidated Independent School District", "CISD") |>
+           str_replace("Independent School District", "ISD"))
+
+years <- sort(unique(disc$year))
+
+# Every boundary x every year, so polygons with no TEA value stay visible (grey)
+disc_geo <- disc |>
+  inner_join(xwalk, by = "cdn") |>
+  distinct(geoid, year, .keep_all = TRUE)
+panel_tbl <- expand_grid(geoid = districts$geoid, year = years) |>
+  left_join(disc_geo, by = c("geoid", "year"))
+map_sf <- districts |>
+  left_join(panel_tbl, by = "geoid", relationship = "one-to-many")
+
+# Rates and shares only (choropleth); names carry the units for legends and axes
+map_vars <- c("Discretionary removals per 100 students"                  = "disc_rate",
+              "Black students: discretionary removals per 100 Black students" = "black_disc_rate",
+              "White students: discretionary removals per 100 White students" = "white_disc_rate",
+              "Black-White risk ratio (1 = parity)"                       = "rr_bw",
+              "Students with an in-school suspension (% of enrolled)"     = "iss_pct",
+              "Students with an out-of-school suspension (% of enrolled)" = "oss_pct",
+              "Discretionary DAEP removals per 1,000 students"           = "daep_disc_rate")
+
+# The enrollment each measure is divided by (used by the small-denominator slider)
+denom_of <- c(disc_rate = "enrolled", black_disc_rate = "enr_black", white_disc_rate = "enr_white",
+              rr_bw = "rr_denom", iss_pct = "enrolled", oss_pct = "enrolled",
+              daep_disc_rate = "enrolled")
+
+# Quantile classes via colorBin(): colorQuantile() fails when many districts
+# share the same value (e.g., zero), so duplicate breaks are dropped first.
+make_pal <- function(v, style) {
+  if (all(is.na(v))) return(NULL)
+  if (style == "quantile") {
+    br <- unique(quantile(v, probs = seq(0, 1, 0.2), na.rm = TRUE, names = FALSE))
+    if (length(br) >= 3) return(colorBin("YlGnBu", domain = v, bins = br, na.color = "#d9d9d9"))
+  }
+  rng <- range(v, na.rm = TRUE)
+  if (rng[1] == rng[2]) rng <- rng + c(-0.5, 0.5)
+  colorNumeric("YlGnBu", domain = rng, na.color = "#d9d9d9")
+}
+```
+
+# Map
+
+## {.sidebar}
+
+```{r}
+selectInput("var", "Measure", choices = map_vars)
+selectInput("year", "School year", choices = rev(years), selected = max(years))
+radioButtons("style", "Colour scale",
+             c("Quantile (5 classes)" = "quantile", "Continuous" = "continuous"))
+sliderInput("min_enr", "Hide rates based on fewer than this many students",
+            min = 0, max = 2000, value = 100, step = 50)
+```
+
+Small denominators produce unstable rates: one or two removals can swing a rate a great deal (Hullman 2020). The slider compares each measure with its own denominator (all students, Black students, or White students; the smaller of the two for the risk ratio). Hidden districts turn grey.
+
+Data: Texas Education Agency, Annual District Discipline Summary (PEIMS). Boundaries: U.S. Census Bureau cartographic school districts (2023), joined through the NCES CCD crosswalk.
+
+## Row {height=20%}
+
+```{r}
+value_box("Districts with a rate shown", textOutput("n"), showcase = bs_icon("map"))
+```
+
+```{r}
+value_box("Districts without a rate (masked, unmatched, or too small)", textOutput("n_na"),
+          showcase = bs_icon("question-circle"))
+```
+
+```{r}
+value_box("Median of selected measure", textOutput("med"), showcase = bs_icon("bar-chart"))
+```
+
+## Row {height=80%}
+
+```{r}
+#| title: "Where the selected measure is highest"
+leafletOutput("map")
+```
+
+```{r}
+#| title: "Top 10 districts on the selected measure"
+plotOutput("top10")
+```
+
+# About
+
+## Row
+
+::: {.card title="Definitions"}
+- **Discretionary removals per 100 students** = (in-school suspension actions + out-of-school suspension actions + discretionary DAEP placement actions) ÷ cumulative year-end enrollment × 100 (TEA section B, "Action counts"; section A, "Cumulative year end enrollment"). One student can receive several actions, so this rate can exceed 100.
+- **Black / White students: removals per 100 students of that group** = the group's ISS + OSS + discretionary DAEP actions (TEA sections C, D, E) ÷ the group's cumulative enrollment (section A) × 100.
+- **Black-White risk ratio** = Black rate ÷ White rate. Values above 1 mean Black students are removed at a higher rate than White students in the same district; undefined when the White rate is 0.
+- **Students with an in-/out-of-school suspension (% of enrolled)** = students suspended at least once (section B, "Student counts") ÷ enrollment × 100.
+- **Discretionary DAEP removals per 1,000 students** = discretionary DAEP placement actions ÷ enrollment × 1,000.
+- **Grey districts**: TEA masked a value to protect student privacy (shown as "<10", "<20", etc.), the district has no TEA match, or the denominator is below the slider threshold. TEA prints no row when a category is zero, so absent rows are counted as 0.
+- Open-enrollment charter schools have no geographic boundary, so they cannot appear on the map.
+:::
+
+```{r}
+#| context: server
+dat <- reactive({
+  req(input$var, input$year, input$min_enr)
+  d <- filter(map_sf, year == input$year)
+  raw_value <- d[[input$var]]
+  den <- d[[denom_of[[input$var]]]]
+  d$status <- case_when(
+    is.na(d$enrolled)                  ~ "no TEA record matched",
+    !is.na(den) & den < input$min_enr  ~ "below enrollment threshold",
+    is.na(raw_value)                   ~ "masked by TEA or not computable",
+    .default                           = "shown")
+  d$value <- if_else(d$status == "shown", raw_value, NA_real_)
+  d
+})
+var_label <- reactive(names(map_vars)[map_vars == input$var])
+
+output$n    <- renderText(format(sum(!is.na(dat()$value)), big.mark = ","))
+output$n_na <- renderText(format(sum(is.na(dat()$value)), big.mark = ","))
+output$med  <- renderText({
+  v <- dat()$value
+  if (all(is.na(v))) "–" else formatC(median(v, na.rm = TRUE), format = "f", digits = 1)
+})
+
+# Base map once; polygons are redrawn by leafletProxy() below.
+# addTiles() = Leaflet's default OpenStreetMap tiles, which need no API key.
+output$map <- renderLeaflet(
+  leaflet() |> addTiles() |> setView(lng = -99.3, lat = 31.2, zoom = 6))
+
+observe({
+  d <- dat()
+  pal <- make_pal(d$value, input$style)
+  labels <- if_else(is.na(d$value),
+                    sprintf("%s: %s", d$label_name, d$status),
+                    sprintf("%s: %.1f", d$label_name, d$value))
+  proxy <- leafletProxy("map", data = d) |> clearShapes() |> clearControls()
+  if (is.null(pal)) {
+    proxy |> addPolygons(fillColor = "#d9d9d9", fillOpacity = 0.8, weight = 0.3,
+                         color = "white", label = labels)
+  } else {
+    proxy |>
+      addPolygons(fillColor = pal(d$value), fillOpacity = 0.8,
+                  weight = 0.3, color = "white", label = labels,
+                  highlightOptions = highlightOptions(weight = 2, bringToFront = TRUE)) |>
+      addLegend(pal = pal, values = d$value, position = "bottomright",
+                title = if (input$style == "quantile") paste(var_label(), "(quintiles)") else var_label(),
+                na.label = "No data")
+  }
+})
+
+# Companion chart: dot plot on a common scale from zero (Cleveland & McGill 1984)
+output$top10 <- renderPlot({
+  d <- dat() |> st_drop_geometry() |> filter(!is.na(value)) |>
+    slice_max(value, n = 10, with_ties = FALSE)
+  validate(need(nrow(d) > 0, "No districts have a value for this selection."))
+  ggplot(d, aes(value, fct_reorder(label_name, value))) +
+    geom_point(size = 3.5, colour = "#1f4e79") +
+    scale_x_continuous(limits = c(0, NA), expand = expansion(mult = c(0, 0.08))) +
+    labs(x = var_label(), y = NULL,
+         caption = sprintf("Source: TEA Annual District Discipline Summary, %s. Rates based on fewer than %s students hidden.",
+                           input$year, format(input$min_enr, big.mark = ","))) +
+    theme_minimal(base_size = 13) +
+    theme(panel.grid.minor = element_blank(), panel.grid.major.y = element_line(colour = "grey90"))
+})
+```

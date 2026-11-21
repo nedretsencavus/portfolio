@@ -1,0 +1,187 @@
+---
+title: "Mapping Discretionary Discipline in Texas School Districts"
+subtitle: "EPPS 6356 Assignment 9, Part B: static maps"
+author: "Nedret Sen Cavus"
+format:
+  html:
+    code-fold: show
+lightbox: true
+execute:
+  warning: false
+  message: false
+---
+
+This page maps the team project data: Texas Education Agency (TEA) district discipline counts, joined to U.S. Census Bureau school-district boundaries. Every map is a rate, a share or a count. Rates and shares are drawn as filled areas (choropleths) and counts as sized symbols, so raw counts are never shown as fill and the denominator is never left out (Cairo 2019, *How Charts Lie*). The static maps use the Albers equal-area projection (EPSG:5070), because a choropleth asks readers to compare areas (Lovelace, Nowosad, and Muenchow, *Geocomputation with R*, ch. 2 and 9).
+
+**Mapped measure.** *Discretionary removals per 100 enrolled students* = (in-school suspension actions + out-of-school suspension actions + discretionary DAEP placement actions) ÷ cumulative year-end enrollment × 100. These come from TEA section B ("Discipline data", action counts) and section A ("Cumulative year end enrollment"). TEA masks small values for student privacy ("<10", "<20", …), and those cells are treated as missing, not zero. TEA prints no row when a category is zero, so absent rows count as 0.
+
+```{r}
+#| label: setup
+library(tidyverse); library(sf); library(tmap); library(patchwork)
+
+# Files written by R/prepare_map_data.R
+files <- c(disc  = "data/tea_discipline_district.csv",
+           xwalk = "data/ccd_crosswalk_tx.csv",
+           bnd   = "data/tx_school_districts.rds")
+if (any(!file.exists(files))) {
+  stop("Missing: ", paste(files[!file.exists(files)], collapse = ", "),
+       ". Run R/prepare_map_data.R first.")
+}
+
+disc <- read_csv(files[["disc"]], show_col_types = FALSE,
+                 col_types = cols(year = col_character(), cdn = col_character(),
+                                  district_name = col_character(),
+                                  charter_status = col_character(), .default = col_double()))
+xwalk <- read_csv(files[["xwalk"]], col_types = cols(.default = col_character()))
+districts <- readRDS(files[["bnd"]])          # sf, stored in EPSG:4326
+
+latest_year <- max(disc$year)                 # e.g., "2023-24"
+pct <- function(p) scales::percent(p, accuracy = 1)
+```
+
+## 1. Join and check
+
+TEA identifies districts by a 6-digit county-district number (CDN). Census boundaries use the 7-digit NCES LEAID (`GEOID`). The NCES Common Core of Data directory links the two. The data-preparation script already fixes what can be fixed: it pads CDNs back to six digits when spreadsheet software drops leading zeros or adds apostrophes.
+
+```{r}
+#| label: join
+disc_latest <- disc |>
+  filter(year == latest_year) |>
+  left_join(xwalk, by = "cdn")                # CDN -> GEOID
+
+districts_map <- districts |>
+  left_join(disc_latest, by = "geoid") |>
+  st_transform("EPSG:5070")                   # Albers equal-area for static maps
+
+# TEA districts with no matching boundary
+unmatched <- disc_latest |>
+  anti_join(st_drop_geometry(districts), by = "geoid") |>
+  mutate(reason = if_else(is.na(geoid),
+                          "No NCES LEAID in the CCD crosswalk",
+                          "LEAID has no Census boundary polygon")) |>
+  select(cdn, district_name, charter_status, enrolled, reason) |>
+  arrange(reason, district_name)
+
+print(unmatched, n = Inf)
+
+n_unmatched  <- nrow(unmatched)
+n_non_isd    <- sum(!str_detect(coalesce(unmatched$district_name, ""), "ISD"))
+n_polys_none <- sum(is.na(districts_map$enrolled))
+```
+
+`r n_unmatched` of the `r nrow(disc_latest)` TEA districts in `r latest_year` remain unmatched, and `r n_non_isd` of those have no "ISD" in their name. These are mostly open-enrollment charter schools: they enroll students from anywhere and have no geographic attendance boundary, so the Census has no polygon to join them to. In the other direction, `r n_polys_none` Census polygons have no TEA value and are shown in grey as "No data."
+
+## 2. Projection comparison
+
+```{r}
+#| label: projections
+#| fig-width: 10
+#| fig-height: 3.4
+# Latitude of a point inside each district (computed in a projected CRS, as sf advises)
+lat <- districts |> st_geometry() |> st_transform(5070) |>
+  st_point_on_surface() |> st_transform(4326) |> st_coordinates()
+
+tx2 <- districts |>
+  mutate(hl = case_when(lat[, "Y"] >= 34 ~ "Panhandle (north of 34°N)",
+                        lat[, "Y"] <= 27 ~ "South Texas (south of 27°N)",
+                        .default = "Other"))
+
+panel <- function(crs) ggplot(st_transform(tx2, crs)) +
+  geom_sf(aes(fill = hl), colour = NA) + labs(title = crs) +
+  scale_fill_manual(values = c("Panhandle (north of 34°N)" = "#1f4e79",
+                               "South Texas (south of 27°N)" = "#c0504d",
+                               Other = "grey85"), guide = "none") +
+  theme_void(base_size = 11)
+
+c("EPSG:4326", "EPSG:3857", "EPSG:5070") |> map(panel) |> wrap_plots(nrow = 1) +
+  plot_annotation(
+    title = "The same Texas school districts in three coordinate reference systems",
+    subtitle = "Blue: Panhandle districts (north of 34°N). Red: South Texas districts (south of 27°N).",
+    caption = "Boundaries: U.S. Census Bureau cartographic school districts (2023) via tigris.")
+```
+
+In EPSG:4326, ggplot draws longitude and latitude as a flat grid scaled to Texas's middle latitude. Meridians therefore stay parallel, so east–west distances come out slightly too wide in the Panhandle and too narrow in South Texas. Web Mercator (EPSG:3857) is worse: it inflates every area by the square of the secant of latitude, about 1.24× at 26°N but 1.53× at 36°N, so Panhandle districts look roughly a quarter larger than South Texas districts of the same size. I would publish the Albers equal-area version (EPSG:5070), because a choropleth asks readers to compare colored areas, and only an equal-area projection keeps each district's ink in proportion to the land it covers.
+
+## 3. Choropleth
+
+```{r}
+#| label: choropleth
+#| fig-width: 8
+#| fig-height: 8
+q <- quantile(districts_map$disc_rate, c(0.1, 0.9), na.rm = TRUE)
+choro_title <- sprintf(
+  "In %s, the middle 80%% of Texas districts ranged from\n%.0f to %.0f discretionary removals per 100 students",
+  latest_year, q[[1]], q[[2]])
+
+tm_shape(districts_map) +
+  tm_polygons(
+    fill = "disc_rate",
+    fill.scale = tm_scale_intervals(style = "quantile", n = 5,
+                                    values = "brewer.yl_gn_bu",
+                                    value.na = "grey85",
+                                    label.na = "No data (masked or unmatched)"),
+    fill.legend = tm_legend(title = "Discretionary removals\nper 100 enrolled students\n(quintiles)"),
+    col = "white", lwd = 0.1) +
+  tm_title(choro_title) +
+  tm_credits(paste0("Data: TEA Annual District Discipline Summary (PEIMS), ", latest_year,
+                    ". Boundaries: U.S. Census Bureau school districts (2023) via tigris.",
+                    "\nProjection: Albers equal-area (EPSG:5070)."),
+             position = c("left", "bottom"))
+```
+
+## 4. Classification comparison
+
+```{r}
+#| label: classes
+#| fig-width: 10
+#| fig-height: 3.6
+class_titles <- c(equal = "Equal interval", quantile = "Quantile", jenks = "Jenks (natural breaks)")
+
+c("equal", "quantile", "jenks") |>
+  map(\(s) tm_shape(districts_map) +
+        tm_polygons(fill = "disc_rate",
+                    fill.scale = tm_scale_intervals(style = s, n = 5,
+                                                    values = "brewer.yl_gn_bu",
+                                                    value.na = "grey85",
+                                                    label.na = "No data"),
+                    fill.legend = tm_legend(title = paste0(class_titles[[s]],
+                                                           "\nremovals per 100 students")),
+                    col = "white", lwd = 0.1)) |>
+  tmap_arrange(ncol = 3)
+
+# Numbers used in the paragraph below
+x <- na.omit(districts_map$disc_rate)
+brks <- map(set_names(names(class_titles)),
+            \(s) classInt::classIntervals(x, n = 5, style = s)$brks)
+top_share <- map_dbl(brks, \(b) mean(x >= b[length(b) - 1]))
+top_start <- map_dbl(brks, \(b) b[length(b) - 1])
+```
+
+With equal intervals, `r pct(top_share[["equal"]])` of districts fall in the darkest class, because the rates are `r if (mean(x) > median(x)) "right-skewed" else "not right-skewed"` (mean `r round(mean(x), 1)` vs. median `r round(median(x), 1)` per 100 students); most of the state shares one or two pale colors and the map mainly flags outliers. Quantile classes put about `r pct(top_share[["quantile"]])` of districts in each class by design. That spreads color across the state, but the darkest class starts at `r round(top_start[["quantile"]], 1)`, so districts with nearly the same rate on either side of a break can look very different. Jenks breaks follow gaps in the data and start the darkest class at `r round(top_start[["jenks"]], 1)` (`r pct(top_share[["jenks"]])` of districts), a middle ground between the other two. I would publish the quantile map: readers rank colors, and equal-count classes give every color the same meaning (one fifth of districts), as long as the legend says the classes are quintiles.
+
+## 5. Proportional symbols
+
+```{r}
+#| label: symbols
+#| fig-width: 8
+#| fig-height: 8
+pts <- districts_map |>
+  filter(!is.na(disc_n)) |>
+  st_point_on_surface()                       # one point inside each district
+
+top10_share <- sum(slice_max(st_drop_geometry(pts), disc_n, n = 10)$disc_n) / sum(pts$disc_n)
+
+ggplot() +
+  geom_sf(data = districts_map, fill = "grey92", colour = "white", linewidth = 0.1) +
+  geom_sf(data = pts, aes(size = disc_n), shape = 21,
+          fill = "#c0504d", colour = "white", alpha = 0.7) +
+  scale_size_area(max_size = 12, name = "Discretionary removal actions (count)",
+                  labels = scales::label_comma()) +
+  labs(title = sprintf("Ten districts account for %s of mapped discretionary removals (%s)",
+                       pct(top10_share), latest_year),
+       subtitle = "Removals are a count, so they are mapped with symbol size, not fill",
+       caption = paste0("Data: TEA Annual District Discipline Summary (PEIMS), ", latest_year,
+                        ".\nBoundaries: U.S. Census Bureau school districts (2023) via tigris.",
+                        " Albers equal-area (EPSG:5070).")) +
+  theme_void() + theme(legend.position = "bottom")
+```

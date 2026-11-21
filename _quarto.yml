@@ -16,6 +16,12 @@ website:
             text: Assignment 4
           - href: assignments/assign07.qmd
             text: Assignment 7
+          - href: assignments/assign09.qmd
+            text: Assignment 9
+      - href: maps.qmd
+        text: Maps
+      - href: PLAN.md
+        text: Project Plan
     right:
       - href: resume/NedretSenCavus_Resume.pdf
         text: Resume/CV
@@ -26,4 +32,3 @@ format:
     toc: true
 
 editor: visual
-

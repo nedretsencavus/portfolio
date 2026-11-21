@@ -1,0 +1,4 @@
+# Makes _dashboard/ its own small Quarto project, so the dashboard renders on its own
+# (locally and on Posit Connect Cloud) and is not treated as part of the website.
+project:
+  type: default
